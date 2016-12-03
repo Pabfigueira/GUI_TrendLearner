@@ -2,12 +2,13 @@
 
 # Form implementation generated from reading ui file '../QtDesignerCode/InitialWindow.ui'
 #
-# Created: Fri Dec  2 16:02:53 2016
+# Created: Sat Dec  3 10:42:13 2016
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+import sys
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -23,7 +24,11 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-class Ui_Form(object):
+class Ui_Form(QtGui.QWidget):
+    def __init__(self):
+        QtGui.QWidget.__init__(self)
+        self.setupUi(self)
+
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(312, 238)
@@ -31,23 +36,23 @@ class Ui_Form(object):
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.verticalLayout = QtGui.QVBoxLayout()
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.label = QtGui.QLabel(Form)
-        self.label.setObjectName(_fromUtf8("label"))
-        self.verticalLayout.addWidget(self.label)
+        self.name_label = QtGui.QLabel(Form)
+        self.name_label.setObjectName(_fromUtf8("name_label"))
+        self.verticalLayout.addWidget(self.name_label)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         self.verticalLayout.addItem(spacerItem)
-        self.pushButton = QtGui.QPushButton(Form)
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.verticalLayout.addWidget(self.pushButton)
-        self.pushButton_2 = QtGui.QPushButton(Form)
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        self.verticalLayout.addWidget(self.pushButton_2)
-        self.pushButton_3 = QtGui.QPushButton(Form)
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        self.verticalLayout.addWidget(self.pushButton_3)
-        self.pushButton_4 = QtGui.QPushButton(Form)
-        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
-        self.verticalLayout.addWidget(self.pushButton_4)
+        self.newProject_btn = QtGui.QPushButton(Form)
+        self.newProject_btn.setObjectName(_fromUtf8("newProject_btn"))
+        self.verticalLayout.addWidget(self.newProject_btn)
+        self.openProject_btn = QtGui.QPushButton(Form)
+        self.openProject_btn.setObjectName(_fromUtf8("openProject_btn"))
+        self.verticalLayout.addWidget(self.openProject_btn)
+        self.about_btn = QtGui.QPushButton(Form)
+        self.about_btn.setObjectName(_fromUtf8("about_btn"))
+        self.verticalLayout.addWidget(self.about_btn)
+        self.exit_btn = QtGui.QPushButton(Form)
+        self.exit_btn.setObjectName(_fromUtf8("exit_btn"))
+        self.verticalLayout.addWidget(self.exit_btn)
         self.verticalLayout_3.addLayout(self.verticalLayout)
 
         self.retranslateUi(Form)
@@ -55,9 +60,14 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(_translate("Form", "Initial", None))
-        self.label.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:26pt; font-weight:600;\">TrendLearnerApp</span></p></body></html>", None))
-        self.pushButton.setText(_translate("Form", "New Project", None))
-        self.pushButton_2.setText(_translate("Form", "Open Project", None))
-        self.pushButton_3.setText(_translate("Form", "About TrendLearnerApp", None))
-        self.pushButton_4.setText(_translate("Form", "Exit", None))
+        self.name_label.setText(_translate("Form", "<html><head/><body><p align=\"center\"><span style=\" font-size:26pt; font-weight:600;\">TrendLearnerApp</span></p></body></html>", None))
+        self.newProject_btn.setText(_translate("Form", "New Project", None))
+        self.openProject_btn.setText(_translate("Form", "Open Project", None))
+        self.about_btn.setText(_translate("Form", "About TrendLearnerApp", None))
+        self.exit_btn.setText(_translate("Form", "Exit", None))
 
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    ex = Ui_Form()
+    ex.show()
+    sys.exit(app.exec_())
