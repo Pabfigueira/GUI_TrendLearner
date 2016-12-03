@@ -65,6 +65,10 @@ class Ui_Form(QtGui.QWidget):
         self.openProject_btn.setText(_translate("Form", "Open Project", None))
         self.about_btn.setText(_translate("Form", "About TrendLearnerApp", None))
         self.exit_btn.setText(_translate("Form", "Exit", None))
+        self.exit_btn.clicked.connect(self.closeWindow)
+
+    def closeWindow(self):
+        self.close()
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
