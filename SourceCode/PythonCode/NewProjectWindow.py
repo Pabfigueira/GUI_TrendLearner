@@ -61,6 +61,7 @@ class Ui_NewProject(QtGui.QWidget):
 		self.name_lineEdit.setObjectName(_fromUtf8("name_lineEdit"))
 		self.gridLayout.addWidget(self.name_lineEdit, 1, 0, 1, 2)
 		self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
+		self.retry = True
 
 		self.retranslateUi(NewProject)
 		QtCore.QMetaObject.connectSlotsByName(NewProject)
@@ -72,10 +73,9 @@ class Ui_NewProject(QtGui.QWidget):
 		self.location_label.setText(_translate("NewProject", "Location:", None))
 		self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.retryToMain)
 		self.browser_btn.clicked.connect(self.getFolder)
+		self.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.okAction)
 
 	def retryToMain(self):
-		self.mainWin = InitialWindow.Ui_Form()
-		self.mainWin.show()
 		self.close()
 
 	'''def getfiles(self):
@@ -91,6 +91,12 @@ class Ui_NewProject(QtGui.QWidget):
 			with f:
 				data = f.read()
 				self.contents.setText(data)'''
+
+	def okAction(self):
+		#AfterVerifyAllDependencies
+		self.retry = False
+		self.close()
+
 	def getFolder(self):
 		dialog = QtGui.QFileDialog(self)
 		dialog.setFileMode(QtGui.QFileDialog.Directory)
@@ -100,5 +106,13 @@ class Ui_NewProject(QtGui.QWidget):
 			for d in dialog.selectedFiles():
 				self.location_lineEdit.setText(d)
 				#print d
+
+	def closeEvent(self, evnt):
+		if( self.retry ):
+			self.mainWin = InitialWindow.Ui_Form()
+			self.mainWin.show()
+		else:
+			print "Ha"
+
 
 	
