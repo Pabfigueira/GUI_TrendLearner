@@ -8,9 +8,10 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from os.path import expanduser
+import os
 import sys
 import InitialWindow
+import string
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -55,7 +56,7 @@ class Ui_NewProject(QtGui.QWidget):
 		self.location_lineEdit = QtGui.QLineEdit(NewProject)
 		self.location_lineEdit.setObjectName(_fromUtf8("location_lineEdit"))
 		self.location_lineEdit.setReadOnly(True)
-		self.location_lineEdit.setText(expanduser("~"))
+		self.location_lineEdit.setText(os.path.expanduser("~"))
 		self.gridLayout.addWidget(self.location_lineEdit, 3, 0, 1, 1)
 		self.name_lineEdit = QtGui.QLineEdit(NewProject)
 		self.name_lineEdit.setObjectName(_fromUtf8("name_lineEdit"))
@@ -93,9 +94,32 @@ class Ui_NewProject(QtGui.QWidget):
 				self.contents.setText(data)'''
 
 	def okAction(self):
-		#AfterVerifyAllDependencies
-		self.retry = False
-		self.close()
+
+		if self.isOkNameLabel():
+			print "OK"
+		else:
+			print "Failed"
+		'''if self.isOkNameLabel :
+			directory = self.location_lineEdit.text() + "/" + self.name_label.text()
+			if not os.path.exists(self.location_lineEdit.text()):
+				os.makedirs(directory)
+				#AfterVerifyAllDependencies
+				self.retry = False
+				self.close()
+			else: 
+				print "Fazer poup-up"
+		else:
+			print "Fazer poup-up do NameLabel"'''
+		
+
+	def isOkNameLabel(self):
+		if self.name_lineEdit.text().size() == 0 :
+			return False
+		for letter in self.name_lineEdit.text():
+			c = unicode(letter.toUtf8(), encoding="UTF-8")
+			if (not c.isdigit()) and c not in string.ascii_letters:
+				return False
+		return True
 
 	def getFolder(self):
 		dialog = QtGui.QFileDialog(self)
