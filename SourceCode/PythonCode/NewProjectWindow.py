@@ -96,12 +96,10 @@ class Ui_NewProject(QtGui.QWidget):
 	def okAction(self):
 
 		if self.isOkNameLabel():
-			print "OK"
-		else:
-			print "Failed"
-		'''if self.isOkNameLabel :
-			directory = self.location_lineEdit.text() + "/" + self.name_label.text()
-			if not os.path.exists(self.location_lineEdit.text()):
+			directory = unicode(self.location_lineEdit.text().toUtf8(), encoding="UTF-8") 
+			directory += "/"
+			directory += unicode(self.name_lineEdit.text().toUtf8(), encoding="UTF-8")
+			if not os.path.exists(directory):
 				os.makedirs(directory)
 				#AfterVerifyAllDependencies
 				self.retry = False
@@ -109,7 +107,7 @@ class Ui_NewProject(QtGui.QWidget):
 			else: 
 				print "Fazer poup-up"
 		else:
-			print "Fazer poup-up do NameLabel"'''
+			print "Fazer poup-up do NameLabel"
 		
 
 	def isOkNameLabel(self):
