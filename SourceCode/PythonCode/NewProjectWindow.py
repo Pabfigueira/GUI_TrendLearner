@@ -8,8 +8,9 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-import sys
 
+import sys
+import InitialWindow
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -67,12 +68,26 @@ class Ui_NewProject(QtGui.QWidget):
 		self.name_label.setText(_translate("NewProject", "Project Name:", None))
 		self.browser_btn.setText(_translate("NewProject", "...", None))
 		self.location_label.setText(_translate("NewProject", "Location:", None))
-		#self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.printHi)
+		self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.retryToMain)
+		self.browser_btn.clicked.connect(self.getfiles)
+
+	def retryToMain(self):
+		self.mainWin = InitialWindow.Ui_Form()
+		self.mainWin.show()
+		self.close()
+
+	def getfiles(self):
+	  dlg = QtGui.QFileDialog()
+	  dlg.setFileMode(QtGui.QFileDialog.AnyFile)
+	  dlg.setFilter("Text files (*.txt)")
+	  filenames = QtCore.QStringList()
+		
+	  if dlg.exec_():
+		 filenames = dlg.selectedFiles()
+		 f = open(filenames[0], 'r')
+			
+		 with f:
+			data = f.read()
+			self.contents.setText(data)
 
 	
-
-if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    ex = Ui_NewProject()
-    ex.show()
-    sys.exit(app.exec_())

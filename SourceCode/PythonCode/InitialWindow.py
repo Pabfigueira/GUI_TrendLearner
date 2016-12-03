@@ -9,6 +9,7 @@
 
 from PyQt4 import QtCore, QtGui
 import sys
+import NewProjectWindow
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -66,8 +67,14 @@ class Ui_Form(QtGui.QWidget):
         self.about_btn.setText(_translate("Form", "About TrendLearnerApp", None))
         self.exit_btn.setText(_translate("Form", "Exit", None))
         self.exit_btn.clicked.connect(self.closeWindow)
+        self.newProject_btn.clicked.connect(self.openNewProjectWindow)
 
     def closeWindow(self):
+        self.close()
+
+    def openNewProjectWindow(self):
+        self.newProjectWin = NewProjectWindow.Ui_NewProject()
+        self.newProjectWin.show()
         self.close()
 
 if __name__ == '__main__':
