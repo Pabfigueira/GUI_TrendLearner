@@ -8,7 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-
+from os.path import expanduser
 import sys
 import InitialWindow
 
@@ -54,6 +54,8 @@ class Ui_NewProject(QtGui.QWidget):
 		self.gridLayout.addWidget(self.location_label, 2, 0, 1, 1)
 		self.location_lineEdit = QtGui.QLineEdit(NewProject)
 		self.location_lineEdit.setObjectName(_fromUtf8("location_lineEdit"))
+		self.location_lineEdit.setReadOnly(True)
+		self.location_lineEdit.setText(expanduser("~"))
 		self.gridLayout.addWidget(self.location_lineEdit, 3, 0, 1, 1)
 		self.name_lineEdit = QtGui.QLineEdit(NewProject)
 		self.name_lineEdit.setObjectName(_fromUtf8("name_lineEdit"))
@@ -69,25 +71,34 @@ class Ui_NewProject(QtGui.QWidget):
 		self.browser_btn.setText(_translate("NewProject", "...", None))
 		self.location_label.setText(_translate("NewProject", "Location:", None))
 		self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.retryToMain)
-		self.browser_btn.clicked.connect(self.getfiles)
+		self.browser_btn.clicked.connect(self.getFolder)
 
 	def retryToMain(self):
 		self.mainWin = InitialWindow.Ui_Form()
 		self.mainWin.show()
 		self.close()
 
-	def getfiles(self):
-	  dlg = QtGui.QFileDialog()
-	  dlg.setFileMode(QtGui.QFileDialog.AnyFile)
-	  dlg.setFilter("Text files (*.txt)")
-	  filenames = QtCore.QStringList()
-		
-	  if dlg.exec_():
-		 filenames = dlg.selectedFiles()
-		 f = open(filenames[0], 'r')
+	'''def getfiles(self):
+		dlg = QtGui.QFileDialog()
+		dlg.setFileMode(QtGui.QFileDialog.AnyFile)
+		dlg.setFilter("Text files (*.txt)")
+		filenames = QtCore.QStringList()
 			
-		 with f:
-			data = f.read()
-			self.contents.setText(data)
+		if dlg.exec_():
+			filenames = dlg.selectedFiles()
+			f = open(filenames[0], 'r')
+				
+			with f:
+				data = f.read()
+				self.contents.setText(data)'''
+	def getFolder(self):
+		dialog = QtGui.QFileDialog(self)
+		dialog.setFileMode(QtGui.QFileDialog.Directory)
+		dialog.setOption(QtGui.QFileDialog.ShowDirsOnly, True)
+
+		if dialog.exec_():
+			for d in dialog.selectedFiles():
+				self.location_lineEdit.setText(d)
+				#print d
 
 	
