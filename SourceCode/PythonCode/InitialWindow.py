@@ -68,6 +68,7 @@ class Ui_Form(QtGui.QWidget):
         self.exit_btn.setText(_translate("Form", "Exit", None))
         self.exit_btn.clicked.connect(self.closeWindow)
         self.newProject_btn.clicked.connect(self.openNewProjectWindow)
+        self.openProject_btn.clicked.connect(self.getProject)
 
     def closeWindow(self):
         self.close()
@@ -76,6 +77,15 @@ class Ui_Form(QtGui.QWidget):
         self.newProjectWin = NewProjectWindow.Ui_NewProject()
         self.newProjectWin.show()
         self.close()
+
+    def getProject(self):
+        dialog = QtGui.QFileDialog(self)
+        dialog.setFileMode(QtGui.QFileDialog.Directory)
+        dialog.setOption(QtGui.QFileDialog.ShowDirsOnly, True)
+
+        if dialog.exec_():
+            for d in dialog.selectedFiles():
+                print d
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
