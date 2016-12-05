@@ -33,6 +33,7 @@ class Ui_NewProject(QtGui.QWidget):
 		self.setupUi(self)
 
 	def setupUi(self, NewProject):
+		self.move(QtGui.QApplication.desktop().screen().rect().center()- self.rect().center())
 		NewProject.setObjectName(_fromUtf8("NewProject"))
 		NewProject.resize(453, 165)
 		self.gridLayout_2 = QtGui.QGridLayout(NewProject)

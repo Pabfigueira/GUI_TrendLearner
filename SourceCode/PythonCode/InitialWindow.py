@@ -31,6 +31,7 @@ class Ui_Form(QtGui.QWidget):
         self.setupUi(self)
 
     def setupUi(self, Form):
+        self.move(QtGui.QApplication.desktop().screen().rect().center()- self.rect().center())
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(312, 238)
         self.verticalLayout_3 = QtGui.QVBoxLayout(Form)
