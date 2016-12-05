@@ -101,13 +101,12 @@ class Ui_NewProject(QtGui.QWidget):
 			directory += unicode(self.name_lineEdit.text().toUtf8(), encoding="UTF-8")
 			if not os.path.exists(directory):
 				os.makedirs(directory)
-				#AfterVerifyAllDependencies
 				self.retry = False
 				self.close()
 			else: 
-				print "Fazer poup-up"
+				self.createErrorBox('The operation can not be completed because the directory "' + directory + '" already exists')
 		else:
-			print "Fazer poup-up do NameLabel"
+			self.createErrorBox('Please enter only letters and/or numbers')
 		
 
 	def isOkNameLabel(self):
@@ -136,5 +135,11 @@ class Ui_NewProject(QtGui.QWidget):
 		else:
 			print "Ha"
 
+	def createErrorBox(self,notification):
+		msg = QtGui.QMessageBox()
+		msg.setIcon(QtGui.QMessageBox.Critical)
 
-	
+		msg.setText(notification)
+		msg.setWindowTitle("Erro")
+		msg.setStandardButtons(QtGui.QMessageBox.Ok)	
+		retval = msg.exec_()	
