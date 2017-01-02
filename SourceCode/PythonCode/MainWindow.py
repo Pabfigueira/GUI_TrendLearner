@@ -33,18 +33,34 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
+
+        # CentralWidget
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         MainWindow.setCentralWidget(self.centralwidget)
+        
+
+
+        # MenuBar
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-
-        #fileMenu = self.menubar.addMenu('&File')
+        fileMenu = self.menubar.addMenu('&File')
         #fileMenu.addAction("Hue")
-        
-
+        editMenu = self.menubar.addMenu('&Edit')
+        #editMenu.addAction("Hue")
+        toolsMenu = self.menubar.addMenu('&Tools')
+        toolsMenu.addMenu("IO")
+        toolsMenu.addMenu("Clustering")
+        toolsMenu.addMenu("Classifier")
+        viewMenu = self.menubar.addMenu('&View')
+        #viewMenu.addAction("Hue")
+        helpMenu = self.menubar.addMenu('&Help')
+        #helpMenu.addAction("Hue")
         MainWindow.setMenuBar(self.menubar)
+
+
+        # StatusBar
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
@@ -115,15 +131,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
-        self.pushButton_2.setText(_translate("MainWindow", "PushButton", None))
-        self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_5), _translate("MainWindow", "Page 1", None))
-        self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_10), _translate("MainWindow", "Page 2", None))
-        self.pushButton_3.setText(_translate("MainWindow", "PushButton", None))
-        self.pushButton.setText(_translate("MainWindow", "PushButton", None))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.First), _translate("MainWindow", "Page 1", None))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_7), _translate("MainWindow", "Page", None))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_6), _translate("MainWindow", "Page 2", None))
+        MainWindow.setWindowTitle(_translate("TrendLearnerApp", "TrendLearnerApp", None))
+        self.pushButton_2.setText(_translate("TrendLearnerApp", "PushButton", None))
+        self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_5), _translate("TrendLearnerApp", "Page 1", None))
+        self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_10), _translate("TrendLearnerApp", "Page 2", None))
+        self.pushButton_3.setText(_translate("TrendLearnerApp", "PushButton", None))
+        self.pushButton.setText(_translate("TrendLearnerApp", "PushButton", None))
+        self.toolBox.setItemText(self.toolBox.indexOf(self.First), _translate("TrendLearnerApp", "Page 1", None))
+        self.toolBox.setItemText(self.toolBox.indexOf(self.page_7), _translate("TrendLearnerApp", "Page", None))
+        self.toolBox.setItemText(self.toolBox.indexOf(self.page_6), _translate("TrendLearnerApp", "Page 2", None))
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
