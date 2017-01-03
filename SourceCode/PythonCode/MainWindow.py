@@ -60,7 +60,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         self.toolsMenu = self.menubar.addMenu('&Tools')
         self.toolsInputMenu = self.toolsMenu.addMenu("Input")
-        self.toolsInputMenu.addAction("ReadFile")
+        self.toolsInputMenu.addAction("ReadFile", self.openMainInput)
         self.toolsClusteringMenu = self.toolsMenu.addMenu("Clustering")
         self.toolsClusteringClusteringMenu = self.toolsClusteringMenu.addMenu("Clustering")
         self.toolsClusteringClusteringMenu.addAction("K-SC")
@@ -238,6 +238,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
         self.uploadFileButton.clicked.connect(self.openMainInput)
+        
 
     def openMainInput(self):
         self.mainInputWin = MainInput.Ui_Dialog()
