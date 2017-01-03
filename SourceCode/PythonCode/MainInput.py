@@ -89,6 +89,18 @@ class Ui_Dialog(QtGui.QDialog):
         self.label_2.setText(_translate("Dialog", "              Train", None))
         self.label_3.setText(_translate("Dialog", "%", None))
         self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.close)
+        self.pushButton.clicked.connect(self.getFile)
+
+    def getFile(self):
+        dialog = QtGui.QFileDialog(self)
+        dialog.setFileMode(QtGui.QFileDialog.ExistingFile)
+        dialog.setNameFilters(['TXT(*.txt)','CSV(*.csv)'])
+        #dialog.setOption(QtGui.QFileDialog.ShowDirsOnly, True)
+
+        if dialog.exec_():
+            for d in dialog.selectedFiles():
+                self.lineEdit.setText(d)
+                print d
 
 
 '''if __name__ == '__main__':
