@@ -89,12 +89,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.verticalLayout_3.addWidget(self.uploadFileButton)
         self.horizontalLayout.addLayout(self.verticalLayout_3)
         self.toolBox.addItem(self.IOWidget, _fromUtf8(""))
-
-        
-        
-        #self.pushButton = QtGui.QPushButton(self.IOWidget)
-        #self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        #self.verticalLayout_3.addWidget(self.pushButton)
         
         
         self.ClusteringWidget = QtGui.QWidget()
@@ -149,19 +143,42 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.ClusteringPlotWidget.setGeometry(QtCore.QRect(0, 0, 104, 234))
         self.ClusteringPlotWidget.setObjectName(_fromUtf8("ClusteringPlotWidget"))
         self.toolBoxClustering.addItem(self.ClusteringPlotWidget, _fromUtf8(""))
+        self.horizontalLayoutClusteringPlotWidget = QtGui.QHBoxLayout(self.ClusteringPlotWidget)
+        self.horizontalLayoutClusteringPlotWidget.setObjectName(_fromUtf8("horizontalLayoutClusteringPlotWidget"))
+        self.verticalLayoutClusteringPlotWidget = QtGui.QVBoxLayout()
+        self.verticalLayoutClusteringPlotWidget.setObjectName(_fromUtf8("verticalLayoutClusteringPlotWidget"))
+        self.plotExamplesButton = QtGui.QPushButton(self.ClusteringPlotWidget)
+        self.plotExamplesButton.setObjectName(_fromUtf8("plotExamplesButton"))
+        self.verticalLayoutClusteringPlotWidget.addWidget(self.plotExamplesButton)
+        self.horizontalLayoutClusteringPlotWidget.addLayout(self.verticalLayoutClusteringPlotWidget)
         self.verticalLayout_4.addWidget(self.toolBoxClustering)
-        
-        
+
 
         self.ClassifierWidget = QtGui.QWidget()
         self.ClassifierWidget.setGeometry(QtCore.QRect(0, 0, 124, 415))
         self.ClassifierWidget.setObjectName(_fromUtf8("ClassifierWidget"))
         self.gridLayout_2 = QtGui.QGridLayout(self.ClassifierWidget)
         self.gridLayout_2.setObjectName(_fromUtf8("gridLayout_2"))
-        self.verticalLayout_5 = QtGui.QVBoxLayout()
-        self.verticalLayout_5.setObjectName(_fromUtf8("verticalLayout_5"))
-        self.gridLayout_2.addLayout(self.verticalLayout_5, 0, 0, 1, 1)
+        self.verticalLayoutClassifierWidget = QtGui.QVBoxLayout()
+        self.verticalLayoutClassifierWidget.setObjectName(_fromUtf8("verticalLayoutClassifierWidget"))
+        self.gridLayout_2.addLayout(self.verticalLayoutClassifierWidget, 0, 0, 1, 1)
         self.toolBox.addItem(self.ClassifierWidget, _fromUtf8(""))
+
+
+        self.probabilityOnlyButton = QtGui.QPushButton(self.ClassifierWidget)
+        self.probabilityOnlyButton.setObjectName(_fromUtf8("probabilityOnlyButton"))        
+        self.verticalLayoutClassifierWidget.addWidget(self.probabilityOnlyButton)
+        self.ertreeOnlyButton = QtGui.QPushButton(self.ClassifierWidget)
+        self.ertreeOnlyButton.setObjectName(_fromUtf8("ertreeOnlyButton"))        
+        self.verticalLayoutClassifierWidget.addWidget(self.ertreeOnlyButton)
+        self.ertreePButton = QtGui.QPushButton(self.ClassifierWidget)
+        self.ertreePButton.setObjectName(_fromUtf8("ertreePButton"))        
+        self.verticalLayoutClassifierWidget.addWidget(self.ertreePButton)
+        self.trendLearnerButton = QtGui.QPushButton(self.ClassifierWidget)
+        self.trendLearnerButton.setObjectName(_fromUtf8("trendLearnerButton"))        
+        self.verticalLayoutClassifierWidget.addWidget(self.trendLearnerButton)
+
+
         self.verticalLayout.addWidget(self.toolBox)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.dockWidget.setWidget(self.dockWidgetContents)
@@ -180,7 +197,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.toolBoxClustering.setItemText(self.toolBoxClustering.indexOf(self.ClusteringPlotWidget), _translate("TrendLearnerApp", "Plot", None))
         self.kscButton.setText(_translate("TrendLearnerApp", "K-SC", None))
         #self.kmeansButton.setText(_translate("TrendLearnerApp", "K-means", None))
-        #self.pushButton.setText(_translate("TrendLearnerApp", "PushButton", None))
+        self.probabilityOnlyButton.setText(_translate("TrendLearnerApp", "Probability Only", None))
+        self.ertreeOnlyButton.setText(_translate("TrendLearnerApp", "ERTree Only", None))
+        self.ertreePButton.setText(_translate("TrendLearnerApp", "ERTree + Prob", None))
+        self.trendLearnerButton.setText(_translate("TrendLearnerApp", "TrendLearner", None))
+        self.plotExamplesButton.setText(_translate("TrendLearnerApp", "Plot Examples", None))
         self.bcvButton.setText(_translate("TrendLearnerApp", "BetaCV", None))
         self.silhouetteButton.setText(_translate("TrendLearnerApp", "Silhouette Índex", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.IOWidget), _translate("TrendLearnerApp", "Input", None))
