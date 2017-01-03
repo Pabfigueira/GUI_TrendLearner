@@ -179,6 +179,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.verticalLayoutClassifierWidget.addWidget(self.trendLearnerButton)
 
 
+
         self.verticalLayout.addWidget(self.toolBox)
         self.verticalLayout_2.addLayout(self.verticalLayout)
         self.dockWidget.setWidget(self.dockWidgetContents)
