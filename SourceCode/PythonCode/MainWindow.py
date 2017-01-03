@@ -236,6 +236,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.toolBox.setItemText(self.toolBox.indexOf(self.IOWidget), _translate("TrendLearnerApp", "Input", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
+        #self.uploadFileButton.clicked.connect(self.getInputFile)
+
+    
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
