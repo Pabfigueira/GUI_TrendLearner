@@ -89,6 +89,7 @@ class Ui_Dialog(QtGui.QDialog):
         self.label_2.setText(_translate("Dialog", "              Train", None))
         self.label_3.setText(_translate("Dialog", "%", None))
         self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.close)
+        self.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.checkOkButton)
         self.pushButton.clicked.connect(self.getFile)
 
     def getFile(self):
@@ -101,6 +102,20 @@ class Ui_Dialog(QtGui.QDialog):
             for d in dialog.selectedFiles():
                 self.lineEdit.setText(d)
                 print d
+
+    def checkOkButton(self):
+        if not self.lineEdit.text().isEmpty():
+            if self.radioButton.isChecked():
+                # Fazer o CheckFile Aqui
+                print "RAndom"
+            elif self.radioButton_2.isChecked():
+                # Fazer o CheckFile Aqui
+                print "Sequential"
+            else:
+                sys.exit()
+        else:
+            # Fazer a notificação de está vazio aqui
+            print "IsEMpty"
 
 
 '''if __name__ == '__main__':
