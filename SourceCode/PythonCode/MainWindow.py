@@ -50,7 +50,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         editMenu = self.menubar.addMenu('&Edit')
         #editMenu.addAction("Hue")
         toolsMenu = self.menubar.addMenu('&Tools')
-        toolsMenu.addMenu("IO")
+        toolsMenu.addMenu("Input")
         toolsMenu.addMenu("Clustering")
         toolsMenu.addMenu("Classifier")
         viewMenu = self.menubar.addMenu('&View')
@@ -82,36 +82,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.IOWidget.setObjectName(_fromUtf8("IOWidget"))
         self.horizontalLayout = QtGui.QHBoxLayout(self.IOWidget)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
-
         self.verticalLayout_3 = QtGui.QVBoxLayout()
         self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
         self.uploadFileButton = QtGui.QPushButton(self.IOWidget)
         self.uploadFileButton.setObjectName(_fromUtf8("uploadFileButton"))
         self.verticalLayout_3.addWidget(self.uploadFileButton)
-        
-        '''self.toolBox_2 = QtGui.QToolBox(self.IOWidget)
-        self.toolBox_2.setObjectName(_fromUtf8("toolBox_2"))
-        self.page_5 = QtGui.QWidget()
-        self.page_5.setGeometry(QtCore.QRect(0, 0, 104, 234))
-        self.page_5.setObjectName(_fromUtf8("page_5"))
-        self.toolBox_2.addItem(self.page_5, _fromUtf8(""))
-        self.page_10 = QtGui.QWidget()
-        self.page_10.setGeometry(QtCore.QRect(0, 0, 104, 234))
-        self.page_10.setObjectName(_fromUtf8("page_10"))
-        self.toolBox_2.addItem(self.page_10, _fromUtf8(""))
-        self.verticalLayout_3.addWidget(self.toolBox_2)'''
-        
+        self.horizontalLayout.addLayout(self.verticalLayout_3)
+        self.toolBox.addItem(self.IOWidget, _fromUtf8(""))
 
-        #self.pushButton_3 = QtGui.QPushButton(self.IOWidget)
-        #self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        #self.verticalLayout_3.addWidget(self.pushButton_3)
+        
         
         #self.pushButton = QtGui.QPushButton(self.IOWidget)
         #self.pushButton.setObjectName(_fromUtf8("pushButton"))
         #self.verticalLayout_3.addWidget(self.pushButton)
         
-        self.horizontalLayout.addLayout(self.verticalLayout_3)
-        self.toolBox.addItem(self.IOWidget, _fromUtf8(""))
+        
         self.ClusteringWidget = QtGui.QWidget()
         self.ClusteringWidget.setObjectName(_fromUtf8("ClusteringWidget"))
         self.gridLayout = QtGui.QGridLayout(self.ClusteringWidget)
@@ -120,6 +105,39 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.verticalLayout_4.setObjectName(_fromUtf8("verticalLayout_4"))
         self.gridLayout.addLayout(self.verticalLayout_4, 0, 0, 1, 1)
         self.toolBox.addItem(self.ClusteringWidget, _fromUtf8(""))
+
+
+        self.toolBoxClustering = QtGui.QToolBox(self.ClusteringWidget)
+        self.toolBoxClustering.setObjectName(_fromUtf8("toolBoxClustering"))
+        self.ClusteringClusteringWidget = QtGui.QWidget()
+        self.ClusteringClusteringWidget.setGeometry(QtCore.QRect(0, 0, 104, 234))
+        self.ClusteringClusteringWidget.setObjectName(_fromUtf8("ClusteringClusteringWidget"))
+        self.toolBoxClustering.addItem(self.ClusteringClusteringWidget, _fromUtf8(""))
+        
+        self.horizontalLayoutClusteringClusteringWidget = QtGui.QHBoxLayout(self.ClusteringClusteringWidget)
+        self.horizontalLayoutClusteringClusteringWidget.setObjectName(_fromUtf8("horizontalLayoutClusteringClusteringWidget"))
+        self.verticalLayoutClusteringClusteringWidget = QtGui.QVBoxLayout()
+        self.verticalLayoutClusteringClusteringWidget.setObjectName(_fromUtf8("verticalLayoutClusteringClusteringWidget"))
+        self.kscButton = QtGui.QPushButton(self.ClusteringClusteringWidget)
+        self.kscButton.setObjectName(_fromUtf8("kscButton"))
+        self.verticalLayoutClusteringClusteringWidget.addWidget(self.kscButton)
+        self.kmeansButton = QtGui.QPushButton(self.ClusteringClusteringWidget)
+        self.kmeansButton.setObjectName(_fromUtf8("kmeansButton"))
+        self.verticalLayoutClusteringClusteringWidget.addWidget(self.kmeansButton)
+        self.horizontalLayoutClusteringClusteringWidget.addLayout(self.verticalLayoutClusteringClusteringWidget)
+
+
+        self.ClusteringQualityWidget = QtGui.QWidget()
+        self.ClusteringQualityWidget.setGeometry(QtCore.QRect(0, 0, 104, 234))
+        self.ClusteringQualityWidget.setObjectName(_fromUtf8("ClusteringQualityWidget"))
+        self.toolBoxClustering.addItem(self.ClusteringQualityWidget, _fromUtf8(""))
+        self.verticalLayout_4.addWidget(self.toolBoxClustering)
+        self.ClusteringPlotWidget = QtGui.QWidget()
+        self.ClusteringPlotWidget.setGeometry(QtCore.QRect(0, 0, 104, 234))
+        self.ClusteringPlotWidget.setObjectName(_fromUtf8("ClusteringPlotWidget"))
+        self.toolBoxClustering.addItem(self.ClusteringPlotWidget, _fromUtf8(""))
+        self.verticalLayout_4.addWidget(self.toolBoxClustering)
+
         self.ClassifierWidget = QtGui.QWidget()
         self.ClassifierWidget.setGeometry(QtCore.QRect(0, 0, 124, 415))
         self.ClassifierWidget.setObjectName(_fromUtf8("ClassifierWidget"))
@@ -136,15 +154,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         self.retranslateUi(MainWindow)
         self.toolBox.setCurrentIndex(0)
-        #self.toolBox_2.setCurrentIndex(0)
+        self.toolBoxClustering.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("TrendLearnerApp", "TrendLearnerApp", None))
         self.uploadFileButton.setText(_translate("TrendLearnerApp", "ReadFile", None))
-        #self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_5), _translate("TrendLearnerApp", "Page 1", None))
-        #self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_10), _translate("TrendLearnerApp", "Page 2", None))
-        #self.pushButton_3.setText(_translate("TrendLearnerApp", "PushButton", None))
+        self.toolBoxClustering.setItemText(self.toolBoxClustering.indexOf(self.ClusteringClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
+        self.toolBoxClustering.setItemText(self.toolBoxClustering.indexOf(self.ClusteringQualityWidget), _translate("TrendLearnerApp", "Quality", None))
+        self.toolBoxClustering.setItemText(self.toolBoxClustering.indexOf(self.ClusteringPlotWidget), _translate("TrendLearnerApp", "Plot", None))
+        self.kscButton.setText(_translate("TrendLearnerApp", "K-SC", None))
+        self.kmeansButton.setText(_translate("TrendLearnerApp", "K-means", None))
         #self.pushButton.setText(_translate("TrendLearnerApp", "PushButton", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.IOWidget), _translate("TrendLearnerApp", "Input", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
