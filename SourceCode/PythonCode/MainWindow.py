@@ -45,25 +45,46 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-        fileMenu = self.menubar.addMenu('&File')
+       
+        self.fileMenu = self.menubar.addMenu('&File')
         #fileMenu.addAction("Hue")
-        editMenu = self.menubar.addMenu('&Edit')
+
+        self.editMenu = self.menubar.addMenu('&Edit')
         #editMenu.addAction("Hue")
-        toolsMenu = self.menubar.addMenu('&Tools')
-        toolsMenu.addMenu("Input")
-        toolsMenu.addMenu("Clustering")
-        toolsMenu.addMenu("Classifier")
-        viewMenu = self.menubar.addMenu('&View')
+
+        self.toolsMenu = self.menubar.addMenu('&Tools')
+        self.toolsInputMenu = self.toolsMenu.addMenu("Input")
+        self.toolsInputMenu.addAction("ReadFile")
+        self.toolsClusteringMenu = self.toolsMenu.addMenu("Clustering")
+        self.toolsClusteringClusteringMenu = self.toolsClusteringMenu.addMenu("Clustering")
+        self.toolsClusteringClusteringMenu.addAction("K-SC")
+        self.toolsClusteringQualityMenu = self.toolsClusteringMenu.addMenu("Quality")
+        self.toolsClusteringQualityMenu.addAction("BetaCV")
+        self.toolsClusteringQualityMenu.addAction(_fromUtf8("Silhouette Index"))
+        self.toolsClusteringPlotMenu = self.toolsClusteringMenu.addMenu("Plot")
+        self.toolsClusteringPlotMenu.addAction("Plot Examples")
+        self.toolsClassifierMenu = self.toolsMenu.addMenu("Classifier")
+        self.toolsClassifierMenu.addAction("Probability Only")
+        self.toolsClassifierMenu.addAction("ERTree Only")
+        self.toolsClassifierMenu.addAction("ERTree + Prob")
+        self.toolsClassifierMenu.addAction("TrendLearner")
+
+
+        self.viewMenu = self.menubar.addMenu('&View')
         #viewMenu.addAction("Hue")
-        helpMenu = self.menubar.addMenu('&Help')
+       
+        self.helpMenu = self.menubar.addMenu('&Help')
         #helpMenu.addAction("Hue")
         MainWindow.setMenuBar(self.menubar)
+
 
 
         # StatusBar
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
+
+
 
         # DockWidget
         self.dockWidget = QtGui.QDockWidget(MainWindow)
@@ -204,7 +225,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.trendLearnerButton.setText(_translate("TrendLearnerApp", "TrendLearner", None))
         self.plotExamplesButton.setText(_translate("TrendLearnerApp", "Plot Examples", None))
         self.bcvButton.setText(_translate("TrendLearnerApp", "BetaCV", None))
-        self.silhouetteButton.setText(_translate("TrendLearnerApp", "Silhouette Índex", None))
+        self.silhouetteButton.setText(_translate("TrendLearnerApp", "Silhouette index", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.IOWidget), _translate("TrendLearnerApp", "Input", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
