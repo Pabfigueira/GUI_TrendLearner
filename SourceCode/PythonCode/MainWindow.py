@@ -10,6 +10,7 @@
 from PyQt4 import QtCore, QtGui
 import sys
 import NewProjectWindow
+import MainInput
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -236,7 +237,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.toolBox.setItemText(self.toolBox.indexOf(self.IOWidget), _translate("TrendLearnerApp", "Input", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
-        #self.uploadFileButton.clicked.connect(self.getInputFile)
+        self.uploadFileButton.clicked.connect(self.openMainInput)
+
+    def openMainInput(self):
+        self.mainInputWin = MainInput.Ui_Dialog()
+        self.mainInputWin.show()
 
     
 

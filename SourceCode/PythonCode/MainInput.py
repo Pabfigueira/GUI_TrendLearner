@@ -9,6 +9,7 @@
 
 from PyQt4 import QtCore, QtGui
 import sys
+import MainWindow
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -83,14 +84,15 @@ class Ui_Dialog(QtGui.QDialog):
         Dialog.setWindowTitle(_translate("Dialog", "Input File", None))
         self.label.setText(_translate("Dialog", "File Directory", None))
         self.pushButton.setText(_translate("Dialog", "...", None))
-        self.radioButton.setText(_translate("Dialog", "Random  Train(50%)", None))
+        self.radioButton.setText(_translate("Dialog", "Random -- Train(50%)", None))
         self.radioButton_2.setText(_translate("Dialog", "Sequential", None))
         self.label_2.setText(_translate("Dialog", "              Train", None))
         self.label_3.setText(_translate("Dialog", "%", None))
+        self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.close)
 
 
-if __name__ == '__main__':
+'''if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     ex = Ui_Dialog()
     ex.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_())'''
