@@ -11,6 +11,7 @@ from PyQt4 import QtCore, QtGui
 import os
 import sys
 import InitialWindow
+import MainWindow
 import string
 
 try:
@@ -134,7 +135,9 @@ class Ui_NewProject(QtGui.QWidget):
 			self.mainWin = InitialWindow.Ui_Form()
 			self.mainWin.show()
 		else:
-			print "Ha"
+			self.mainWin = MainWindow.Ui_MainWindow()
+			self.mainWin.show()
+			#print "Ha"
 
 	def createErrorBox(self,notification):
 		msg = QtGui.QMessageBox()

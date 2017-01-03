@@ -9,6 +9,7 @@
 
 from PyQt4 import QtCore, QtGui
 import sys
+import NewProjectWindow
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -46,7 +47,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
         self.menubar.setObjectName(_fromUtf8("menubar"))
        
-        self.fileMenu = self.menubar.addMenu('&File')
+        self.projectMenu = self.menubar.addMenu('&Project')
+        self.projectMenu.addAction("New...")
+        self.projectMenu.addAction("Save")
+        self.projectMenu.addSeparator()
+        self.projectMenu.addAction("Exit")
         #fileMenu.addAction("Hue")
 
         self.editMenu = self.menubar.addMenu('&Edit')
@@ -74,6 +79,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         #viewMenu.addAction("Hue")
        
         self.helpMenu = self.menubar.addMenu('&Help')
+        self.helpMenu.addAction("Help Contents")
+        self.helpMenu.addAction("About TrendLearnerApp")
         #helpMenu.addAction("Hue")
         MainWindow.setMenuBar(self.menubar)
 
