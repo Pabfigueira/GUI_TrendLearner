@@ -233,7 +233,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.trendLearnerButton.setText(_translate("TrendLearnerApp", "TrendLearner", None))
         self.plotExamplesButton.setText(_translate("TrendLearnerApp", "Plot Examples", None))
         self.bcvButton.setText(_translate("TrendLearnerApp", "BetaCV", None))
-        self.silhouetteButton.setText(_translate("TrendLearnerApp", "Silhouette index", None))
+        self.silhouetteButton.setText(_translate("TrendLearnerApp", "Silhouette Index", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.IOWidget), _translate("TrendLearnerApp", "Input", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
