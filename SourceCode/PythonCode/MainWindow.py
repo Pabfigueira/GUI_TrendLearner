@@ -11,6 +11,8 @@ from PyQt4 import QtCore, QtGui
 import sys
 import NewProjectWindow
 import MainInput
+import generateCrossVals
+import os
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -296,8 +298,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			if self.mainInputWin.radioButton.isChecked():
 				# Fazer o CheckFile Aqui
 				print "RAndom"
-				# Esse é o jeito de pegar o diretório escolhido pelo usuário
-				self.plainTextEditLog2.appendPlainText(self.mainInputWin.lineEdit.text())
+				generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),"/home/pablo/TesteBasico/")
+				#generateCrossVals.generateCrossValsRandom("/home/pablo/Área de Trabalho/AlgotrandingT2/Dados/BOVA11.txt", "/home/pablo/TesteBasico/")
 				self.setUploadFileButtonDisabled()
 			elif self.mainInputWin.radioButton_2.isChecked():
 				# Fazer o CheckFile Aqui
