@@ -89,7 +89,7 @@ class Ui_Dialog(QtGui.QDialog):
 		self.label_2.setText(_translate("Dialog", "              Train", None))
 		self.label_3.setText(_translate("Dialog", "%", None))
 		self.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.close)
-		self.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.checkOkButton)
+		#self.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.checkOkButton)
 		self.pushButton.clicked.connect(self.getFile)
 
 	def getFile(self):
@@ -103,7 +103,7 @@ class Ui_Dialog(QtGui.QDialog):
 				self.lineEdit.setText(d)
 				#print d
 
-	def checkOkButton(self):
+	'''def checkOkButton(self):
 		if not self.lineEdit.text().isEmpty():
 			if self.radioButton.isChecked():
 				# Fazer o CheckFile Aqui
@@ -124,7 +124,7 @@ class Ui_Dialog(QtGui.QDialog):
 		msg.setText(notification)
 		msg.setWindowTitle("Erro")
 		msg.setStandardButtons(QtGui.QMessageBox.Ok)	
-		retval = msg.exec_()
+		retval = msg.exec_()'''
 
 
 if __name__ == '__main__':
