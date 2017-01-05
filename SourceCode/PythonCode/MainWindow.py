@@ -299,7 +299,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 				# Fazer o CheckFile Aqui
 				print "RAndom"
 				generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),"/home/pablo/TesteBasico/")
-				#generateCrossVals.generateCrossValsRandom("/home/pablo/Área de Trabalho/AlgotrandingT2/Dados/BOVA11.txt", "/home/pablo/TesteBasico/")
 				self.setUploadFileButtonDisabled()
 			elif self.mainInputWin.radioButton_2.isChecked():
 				# Fazer o CheckFile Aqui
