@@ -8,7 +8,20 @@ import numpy as np
 import os
 import plac
 import sys
+from shutil import copyfile
 
+EPS = 1e-6
+
+def tryload_series(tseries_fpath):
+	try: 
+		#Refazer esse código pra só aceitar Tipos válidos
+		X = np.genfromtxt(tseries_fpath)[:, 0:] + EPS
+		#train_idx = np.loadtxt(idx_fpath, dtype='bool')
+    	#np.asanyarray(X[train_idx], order='C')
+		np.asanyarray(X)
+		return True
+	except:
+		return False
 
 def generateCrossValsSequential(tseries_fpath, out_folder, tax):
 	X = np.genfromtxt(tseries_fpath)[:,0:]
@@ -21,6 +34,7 @@ def generateCrossValsSequential(tseries_fpath, out_folder, tax):
 		
 	try:
 		os.makedirs(curr_out_folder)
+		copyfile(tseries_fpath, curr_out_folder + "/Input.txt")
 	except:
 		pass
 
@@ -38,6 +52,7 @@ def generateCrossValsSequential(tseries_fpath, out_folder, tax):
 
 
 
+
 def generateCrossValsRandom(tseries_fpath, out_folder):
 	X = np.genfromtxt(tseries_fpath)[:,0:]
 	num_series = X.shape[0]
@@ -51,6 +66,7 @@ def generateCrossValsRandom(tseries_fpath, out_folder):
 		
 		try:
 			os.makedirs(curr_out_folder)
+			copyfile(tseries_fpath, curr_out_folder + "/Input.txt")
 		except:
 			pass
 		

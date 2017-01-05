@@ -295,16 +295,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 	def checkOkButton(self):
 		if not self.mainInputWin.lineEdit.text().isEmpty():
-			if self.mainInputWin.radioButton.isChecked():
-				# Fazer o CheckFile no proximo script
-				generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),"/home/pablo/TesteBasico/")
-				self.setUploadFileButtonDisabled()
-			elif self.mainInputWin.radioButton_2.isChecked():
-				# Fazer o CheckFile no proximo script
-				generateCrossVals.generateCrossValsSequential(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),"/home/pablo/TesteBasico/", self.mainInputWin.spinBox.value()/100.00)
-				self.setUploadFileButtonDisabled()
+			if generateCrossVals.tryload_series(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8")):
+				if self.mainInputWin.radioButton.isChecked():
+					generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory)
+					self.setUploadFileButtonDisabled()
+				elif self.mainInputWin.radioButton_2.isChecked():
+					generateCrossVals.generateCrossValsSequential(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory, self.mainInputWin.spinBox.value()/100.00)
+					self.setUploadFileButtonDisabled()
+				else:
+					sys.exit()
 			else:
-				sys.exit()
+				self.createErrorBox('The operation can not be completed because the file is in incompatible format')
 		else:
 			self.createErrorBox('The operation can not be completed because the file directory is empty')
 

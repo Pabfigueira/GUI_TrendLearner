@@ -136,6 +136,7 @@ class Ui_NewProject(QtGui.QWidget):
 			self.mainWin.show()
 		else:
 			self.mainWin = MainWindow.Ui_MainWindow()
+			self.mainWin.projectDirectory = unicode(self.location_lineEdit.text().toUtf8(),encoding="UTF-8") + "/" + unicode(self.name_lineEdit.text().toUtf8(), encoding="UTF-8")
 			self.mainWin.show()
 			#print "Ha"
 

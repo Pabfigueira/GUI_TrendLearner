@@ -101,30 +101,6 @@ class Ui_Dialog(QtGui.QDialog):
 		if dialog.exec_():
 			for d in dialog.selectedFiles():
 				self.lineEdit.setText(d)
-				#print d
-
-	'''def checkOkButton(self):
-		if not self.lineEdit.text().isEmpty():
-			if self.radioButton.isChecked():
-				# Fazer o CheckFile Aqui
-				print "RAndom"
-			elif self.radioButton_2.isChecked():
-				# Fazer o CheckFile Aqui
-				print "Sequential"
-				print self.spinBox.value()
-			else:
-				sys.exit()
-		else:
-			self.createErrorBox('The operation can not be completed because the file directory is empty')
-
-	def createErrorBox(self,notification):
-		msg = QtGui.QMessageBox()
-		msg.setIcon(QtGui.QMessageBox.Critical)
-
-		msg.setText(notification)
-		msg.setWindowTitle("Erro")
-		msg.setStandardButtons(QtGui.QMessageBox.Ok)	
-		retval = msg.exec_()'''
 
 
 if __name__ == '__main__':
