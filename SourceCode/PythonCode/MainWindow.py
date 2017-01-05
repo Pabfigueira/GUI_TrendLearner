@@ -42,6 +42,53 @@ class Ui_MainWindow(QtGui.QMainWindow):
         MainWindow.setCentralWidget(self.centralwidget)
         
 
+        ## Tenta
+        self.gridLayoutCentral = QtGui.QGridLayout(self.centralwidget)
+        self.gridLayoutCentral.setObjectName(_fromUtf8("gridLayoutCentral"))
+        self.verticalLayoutTop = QtGui.QVBoxLayout()
+        self.verticalLayoutTop.setObjectName(_fromUtf8("verticalLayoutTop"))
+        self.dockWidgetTop = QtGui.QDockWidget(self.centralwidget)
+        self.dockWidgetTop.setObjectName(_fromUtf8("dockWidgetTop"))
+        self.dockWidgetContentsTop = QtGui.QWidget()
+        self.dockWidgetContentsTop.setObjectName(_fromUtf8("dockWidgetContentsTop"))
+        self.gridLayoutTop = QtGui.QGridLayout(self.dockWidgetContentsTop)
+        self.gridLayoutTop.setObjectName(_fromUtf8("gridLayoutTop"))
+        self.verticalLayoutTopInside = QtGui.QVBoxLayout()
+        self.verticalLayoutTopInside.setObjectName(_fromUtf8("verticalLayoutTopInside"))
+        self.gridLayoutTop.addLayout(self.verticalLayoutTopInside, 0, 0, 1, 1)
+        self.dockWidgetTop.setWidget(self.dockWidgetContentsTop)
+        self.verticalLayoutTop.addWidget(self.dockWidgetTop)
+        self.gridLayoutCentral.addLayout(self.verticalLayoutTop, 0, 0, 1, 1)
+        self.verticalLayoutDown = QtGui.QVBoxLayout()
+        self.verticalLayoutDown.setObjectName(_fromUtf8("verticalLayoutDown"))
+        self.dockWidgetDown = QtGui.QDockWidget(self.centralwidget)
+        self.dockWidgetDown.setObjectName(_fromUtf8("dockWidgetDown"))
+        self.dockWidgetContentsDown = QtGui.QWidget()
+        self.dockWidgetContentsDown.setObjectName(_fromUtf8("dockWidgetContentsDown"))
+        self.gridLayoutDown = QtGui.QGridLayout(self.dockWidgetContentsDown)
+        self.gridLayoutDown.setObjectName(_fromUtf8("gridLayoutDown"))
+        self.verticalLayoutDownInside = QtGui.QVBoxLayout()
+        self.verticalLayoutDownInside.setObjectName(_fromUtf8("verticalLayoutDownInside"))
+        self.plainTextEditLog = QtGui.QPlainTextEdit(self.dockWidgetContentsDown)
+        self.plainTextEditLog.setObjectName(_fromUtf8("plainTextEditLog"))
+        self.plainTextEditLog.setReadOnly(True)
+        self.verticalLayoutDownInside.addWidget(self.plainTextEditLog)
+        self.gridLayoutDown.addLayout(self.verticalLayoutDownInside, 0, 0, 1, 1)
+        self.dockWidgetDown.setWidget(self.dockWidgetContentsDown)
+        self.verticalLayoutDown.addWidget(self.dockWidgetDown)
+        self.gridLayoutCentral.addLayout(self.verticalLayoutDown, 1, 0, 1, 1)
+        self.plainTextEditLog.appendPlainText("TrendLearnerApp started...\n")
+        #self.plainTextEditLog.appendPlainText("Reading input file...")
+        #self.plainTextEditLog.appendPlainText("Done")
+
+        ## Temporário
+        self.plainTextEditLog2 = QtGui.QPlainTextEdit(self.dockWidgetContentsTop)
+        self.plainTextEditLog2.setObjectName(_fromUtf8("plainTextEditLog2"))
+        self.plainTextEditLog2.setReadOnly(True)
+        self.verticalLayoutTopInside.addWidget(self.plainTextEditLog2)
+        ## FimTemporário
+        ## FimTenta
+
         # MenuBar
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
@@ -240,8 +287,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         
 
     def openMainInput(self):
-        self.mainInputWin = MainInput.Ui_Dialog()
+        self.mainInputWin = MainInput.Ui_Dialog(self)
+        #self.mainInputWin.exec_()
         self.mainInputWin.show()
+
 
     
 
