@@ -42,7 +42,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         MainWindow.setCentralWidget(self.centralwidget)
         
 
-
         # MenuBar
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
