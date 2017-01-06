@@ -15,7 +15,7 @@ EPS = 1e-6
 
 def tryload_series(tseries_fpath):
 	try: 
-		X = np.genfromtxt(tseries_fpath)[:,0:] + EPS
+		X = np.genfromtxt(tseries_fpath)[:,1:] + EPS
 		matrix = np.asanyarray(X)
 		if(len(matrix) < 2):
 			return False
@@ -28,7 +28,7 @@ def tryload_series(tseries_fpath):
 		return False
 
 def generateCrossValsSequential(tseries_fpath, out_folder, tax):
-	X = np.genfromtxt(tseries_fpath)[:,0:]
+	X = np.genfromtxt(tseries_fpath)[:,1:]
 	num_series = X.shape[0]
 	
 	to_save_train = np.zeros(len(X), dtype='b')
@@ -58,7 +58,7 @@ def generateCrossValsSequential(tseries_fpath, out_folder, tax):
 
 
 def generateCrossValsRandom(tseries_fpath, out_folder):
-	X = np.genfromtxt(tseries_fpath)[:,0:]
+	X = np.genfromtxt(tseries_fpath)[:,1:]
 	num_series = X.shape[0]
 	
 	cv = model_selection.KFold(2, shuffle=True)

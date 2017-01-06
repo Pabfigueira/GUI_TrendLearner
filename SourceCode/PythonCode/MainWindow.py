@@ -15,6 +15,7 @@ import generateCrossVals
 import os
 import cluster
 import MainKSC
+import plot_members
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -111,12 +112,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsInputMenuReadFileAction = self.toolsInputMenu.addAction("ReadFile", self.openMainInput)
 		self.toolsClusteringMenu = self.toolsMenu.addMenu("Clustering")
 		self.toolsClusteringClusteringMenu = self.toolsClusteringMenu.addMenu("Clustering")
-		self.toolsClusteringClusteringMenuKSCAction = self.toolsClusteringClusteringMenu.addAction("K-SC")
+		self.toolsClusteringClusteringMenuKSCAction = self.toolsClusteringClusteringMenu.addAction("K-SC", self.openMainKSC)
 		self.toolsClusteringQualityMenu = self.toolsClusteringMenu.addMenu("Quality")
 		self.toolsClusteringQualityMenuBetaCVAction = self.toolsClusteringQualityMenu.addAction("BetaCV")
 		self.toolsClusteringQualityMenuSilhouetteAction = self.toolsClusteringQualityMenu.addAction(_fromUtf8("Silhouette Index"))
 		self.toolsClusteringPlotMenu = self.toolsClusteringMenu.addMenu("Plot")
-		self.toolsClusteringPlotMenuPlotAction = self.toolsClusteringPlotMenu.addAction("Plot Examples")
+		self.toolsClusteringPlotMenuPlotAction = self.toolsClusteringPlotMenu.addAction("Plot Examples", self.openMainPlotExamples)
 		self.toolsClassifierMenu = self.toolsMenu.addMenu("Classifier")
 		self.toolsClassifierMenuProbAction = self.toolsClassifierMenu.addAction("Probability Only")
 		self.toolsClassifierMenuERTreeAction = self.toolsClassifierMenu.addAction("ERTree Only")
@@ -306,7 +307,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
 		self.uploadFileButton.clicked.connect(self.openMainInput)
 		self.kscButton.clicked.connect(self.openMainKSC)
-		
+		self.plotExamplesButton.clicked.connect(self.openMainPlotExamples)
 
 	def openMainInput(self):
 		self.mainInputWin = MainInput.Ui_Dialog(self)
@@ -320,6 +321,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.plainTextEditLog.appendPlainText("Clustering...")
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.kscCancelButtonPressed)
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.kscOkButtonPressed)
+
+	def openMainPlotExamples(self):
+		self.plainTextEditLog.appendPlainText("Ploting examples...")
+		plotfolder = os.path.join(os.path.join(self.projectDirectory,"Clustering"), "Examples")
+		os.makedirs(plotfolder)
+		plot_members.plotExamples(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Clustering/assign.dat", self.projectDirectory + "/Clustering/cents.dat", plotfolder)
+		self.plotExamplesButton.setDisabled(True)
+		self.toolsClusteringPlotMenuPlotAction.setDisabled(True)
+		self.plainTextEditLog.appendPlainText("Done!\n")
 
 	def kscCancelButtonPressed(self):
 		self.plainTextEditLog.appendPlainText("Canceled!\n")
@@ -352,6 +362,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 	def setKscButtonDisabled(self):
 		self.kscButton.setDisabled(True)
 		self.toolsClusteringClusteringMenuKSCAction.setDisabled(True)
+		#Butões
 		self.plotExamplesButton.setDisabled(False)
 		self.probabilityOnlyButton.setDisabled(False)
 		self.ertreePButton.setDisabled(False)
@@ -367,7 +378,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 	def setUploadFileButtonDisabled(self):
 		self.uploadFileButton.setDisabled(True)
 		self.toolsInputMenuReadFileAction.setDisabled(True)
-		# butões
+		#Butões
 		self.kscButton.setDisabled(False)
 		self.bcvButton.setDisabled(False)
 		self.silhouetteButton.setDisabled(False)
