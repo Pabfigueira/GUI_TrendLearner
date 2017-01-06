@@ -13,6 +13,8 @@ import NewProjectWindow
 import MainInput
 import generateCrossVals
 import os
+import cluster
+import MainKSC
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -284,6 +286,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolBox.setItemText(self.toolBox.indexOf(self.ClusteringWidget), _translate("TrendLearnerApp", "Clustering", None))
 		self.toolBox.setItemText(self.toolBox.indexOf(self.ClassifierWidget), _translate("TrendLearnerApp", "Classifier", None))
 		self.uploadFileButton.clicked.connect(self.openMainInput)
+		self.kscButton.clicked.connect(self.openMainKSC)
 		
 
 	def openMainInput(self):
@@ -292,6 +295,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.mainInputWin.show()
 		self.mainInputWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.checkOkButton)
 
+	def openMainKSC(self):
+		self.mainKSCWin = MainKSC.Ui_Dialog(self)
+		self.mainKSCWin.show()
+		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.kscOkButtonPressed)
+
+	def kscOkButtonPressed(self):
+		self.plainTextEditLog.appendPlainText("Clustering...\n")
+		cluster.clusterKSC(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/", self.mainKSCWin.spinBox.value())
+		self.setKscButtonDisabled()
+		self.plainTextEditLog.appendPlainText("Done!\n")
 
 	def checkOkButton(self):
 		if not self.mainInputWin.lineEdit.text().isEmpty():
@@ -312,6 +325,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
 				self.createErrorBox('The operation can not be completed because the file is in incompatible format.\n\nCheck Help contents to see the correct format.')
 		else:
 			self.createErrorBox('The operation can not be completed because the file directory is empty')
+
+	def setKscButtonDisabled(self):
+		self.kscButton.setDisabled(True)
+		self.toolsClusteringClusteringMenuKSCAction.setDisabled(True)
 
 	def setUploadFileButtonDisabled(self):
 		self.uploadFileButton.setDisabled(True)
