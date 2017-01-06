@@ -82,8 +82,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.verticalLayoutDown.addWidget(self.dockWidgetDown)
 		self.gridLayoutCentral.addLayout(self.verticalLayoutDown, 1, 0, 1, 1)
 		self.plainTextEditLog.appendPlainText("TrendLearnerApp started...\n")
-		#self.plainTextEditLog.appendPlainText("Reading input file...")
-		#self.plainTextEditLog.appendPlainText("Done")
 
 		## Temporário
 		self.plainTextEditLog2 = QtGui.QPlainTextEdit(self.dockWidgetContentsTop)
@@ -267,6 +265,27 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolBoxClustering.setCurrentIndex(0)
 		QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+
+		# Desabilitando butões
+		self.kscButton.setDisabled(True)
+		self.bcvButton.setDisabled(True)
+		self.silhouetteButton.setDisabled(True)
+		self.plotExamplesButton.setDisabled(True)
+		self.probabilityOnlyButton.setDisabled(True)
+		self.ertreePButton.setDisabled(True)
+		self.ertreeOnlyButton.setDisabled(True)
+		self.trendLearnerButton.setDisabled(True)
+		#Desabilitando Menus
+		self.toolsClusteringClusteringMenuKSCAction.setDisabled(True)
+		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(True)
+		self.toolsClusteringQualityMenuSilhouetteAction.setDisabled(True)
+		self.toolsClusteringPlotMenuPlotAction.setDisabled(True)
+		self.toolsClassifierMenuERTreeAction.setDisabled(True)
+		self.toolsClassifierMenuProbAction.setDisabled(True)
+		self.toolsClassifierMenuTrendLearnerAction.setDisabled(True)
+		self.toolsClassifierMenuERTreeProbAction.setDisabled(True)
+
+
 	def retranslateUi(self, MainWindow):
 		MainWindow.setWindowTitle(_translate("TrendLearnerApp", "TrendLearnerApp", None))
 		self.uploadFileButton.setText(_translate("TrendLearnerApp", "ReadFile", None))
@@ -298,10 +317,14 @@ class Ui_MainWindow(QtGui.QMainWindow):
 	def openMainKSC(self):
 		self.mainKSCWin = MainKSC.Ui_Dialog(self)
 		self.mainKSCWin.show()
+		self.plainTextEditLog.appendPlainText("Clustering...")
+		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.kscCancelButtonPressed)
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.kscOkButtonPressed)
 
+	def kscCancelButtonPressed(self):
+		self.plainTextEditLog.appendPlainText("Canceled!\n")
+
 	def kscOkButtonPressed(self):
-		self.plainTextEditLog.appendPlainText("Clustering...\n")
 		cluster.clusterKSC(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/", self.mainKSCWin.spinBox.value())
 		self.setKscButtonDisabled()
 		self.plainTextEditLog.appendPlainText("Done!\n")
@@ -310,12 +333,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		if not self.mainInputWin.lineEdit.text().isEmpty():
 			if generateCrossVals.tryload_series(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8")):
 				if self.mainInputWin.radioButton.isChecked():
-					self.plainTextEditLog.appendPlainText("Reading Input File...\n")
+					self.plainTextEditLog.appendPlainText("Reading Input File...")
 					generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory)
 					self.setUploadFileButtonDisabled()
 					self.plainTextEditLog.appendPlainText("Done!\n")
 				elif self.mainInputWin.radioButton_2.isChecked():
-					self.plainTextEditLog.appendPlainText("Reading Input File...\n")
+					self.plainTextEditLog.appendPlainText("Reading Input File...")
 					generateCrossVals.generateCrossValsSequential(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory, self.mainInputWin.spinBox.value()/100.00)
 					self.setUploadFileButtonDisabled()
 					self.plainTextEditLog.appendPlainText("Done!\n")
@@ -329,10 +352,30 @@ class Ui_MainWindow(QtGui.QMainWindow):
 	def setKscButtonDisabled(self):
 		self.kscButton.setDisabled(True)
 		self.toolsClusteringClusteringMenuKSCAction.setDisabled(True)
+		self.plotExamplesButton.setDisabled(False)
+		self.probabilityOnlyButton.setDisabled(False)
+		self.ertreePButton.setDisabled(False)
+		self.ertreeOnlyButton.setDisabled(False)
+		self.trendLearnerButton.setDisabled(False)
+		#Desabilitando Menus
+		self.toolsClusteringPlotMenuPlotAction.setDisabled(False)
+		self.toolsClassifierMenuERTreeAction.setDisabled(False)
+		self.toolsClassifierMenuProbAction.setDisabled(False)
+		self.toolsClassifierMenuTrendLearnerAction.setDisabled(False)
+		self.toolsClassifierMenuERTreeProbAction.setDisabled(False)
 
 	def setUploadFileButtonDisabled(self):
 		self.uploadFileButton.setDisabled(True)
 		self.toolsInputMenuReadFileAction.setDisabled(True)
+		# butões
+		self.kscButton.setDisabled(False)
+		self.bcvButton.setDisabled(False)
+		self.silhouetteButton.setDisabled(False)
+		#Menus
+		self.toolsClusteringClusteringMenuKSCAction.setDisabled(False)
+		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(False)
+		self.toolsClusteringQualityMenuSilhouetteAction.setDisabled(False)
+		
 
 	def createErrorBox(self,notification):
 		msg = QtGui.QMessageBox()
