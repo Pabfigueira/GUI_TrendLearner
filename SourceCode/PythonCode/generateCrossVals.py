@@ -9,16 +9,20 @@ import os
 import plac
 import sys
 from shutil import copyfile
+from math import isnan
 
 EPS = 1e-6
 
 def tryload_series(tseries_fpath):
 	try: 
-		#Refazer esse código pra só aceitar Tipos válidos
-		X = np.genfromtxt(tseries_fpath)[:, 0:] + EPS
-		#train_idx = np.loadtxt(idx_fpath, dtype='bool')
-    	#np.asanyarray(X[train_idx], order='C')
-		np.asanyarray(X)
+		X = np.genfromtxt(tseries_fpath)[:,0:] + EPS
+		matrix = np.asanyarray(X)
+		if(len(matrix) < 2):
+			return False
+		for vector in matrix:
+			for value in vector:
+				if isnan(value) or value < (0 + EPS):
+					return False
 		return True
 	except:
 		return False
@@ -57,7 +61,7 @@ def generateCrossValsRandom(tseries_fpath, out_folder):
 	X = np.genfromtxt(tseries_fpath)[:,0:]
 	num_series = X.shape[0]
 	
-	cv = model_selection.KFold(5, shuffle=True)
+	cv = model_selection.KFold(2, shuffle=True)
 	to_save_train = np.zeros(len(X), dtype='b')
 	to_save_test = np.zeros(len(X), dtype='b')
 

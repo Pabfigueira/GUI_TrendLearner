@@ -297,15 +297,19 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		if not self.mainInputWin.lineEdit.text().isEmpty():
 			if generateCrossVals.tryload_series(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8")):
 				if self.mainInputWin.radioButton.isChecked():
+					self.plainTextEditLog.appendPlainText("Reading Input File...\n")
 					generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory)
 					self.setUploadFileButtonDisabled()
+					self.plainTextEditLog.appendPlainText("Done!\n")
 				elif self.mainInputWin.radioButton_2.isChecked():
+					self.plainTextEditLog.appendPlainText("Reading Input File...\n")
 					generateCrossVals.generateCrossValsSequential(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory, self.mainInputWin.spinBox.value()/100.00)
 					self.setUploadFileButtonDisabled()
+					self.plainTextEditLog.appendPlainText("Done!\n")
 				else:
 					sys.exit()
 			else:
-				self.createErrorBox('The operation can not be completed because the file is in incompatible format')
+				self.createErrorBox('The operation can not be completed because the file is in incompatible format.\n\nCheck Help contents to see the correct format.')
 		else:
 			self.createErrorBox('The operation can not be completed because the file directory is empty')
 
