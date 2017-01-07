@@ -19,6 +19,8 @@ import plot_members
 import SelectingAClusteringFolderPlot
 import classify_pts
 import DefiningF1AndGamma
+import classify_pts_test
+import create_test_assign
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -345,12 +347,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
 				pass
 			plotfolder = os.path.join(plotfolder,"ProbOnly")
 			os.makedirs(plotfolder)
-			os.makedirs( os.path.join(plotfolder, "probs") )
 
 			#Chamar Métodos Aqui
+			os.makedirs( os.path.join(plotfolder, "probs") )
 			classify_pts.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/train.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs"), self.DefiningF1andGammaWinProbOnly.spinBox.value())
 			
+			os.makedirs( os.path.join(plotfolder, "probs-test") )
+			classify_pts_test.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", os.path.join(plotfolder,"../../cents.dat"), self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs-test"), self.DefiningF1andGammaWinProbOnly.spinBox.value())
+
+			create_test_assign.create_test_assignMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../test_assign.dat"))
 			#Fim dos Métodos
+			
 			self.plainTextEditLog.appendPlainText("Done!\n")
 		else:
 			self.createErrorBox("All possible examples have already been generated")
