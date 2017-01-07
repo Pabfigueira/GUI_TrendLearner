@@ -21,6 +21,8 @@ import classify_pts
 import DefiningF1AndGamma
 import classify_pts_test
 import create_test_assign
+import classify_theta_train
+import classify_theta
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -356,8 +358,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			classify_pts_test.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", os.path.join(plotfolder,"../../cents.dat"), self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs-test"), self.DefiningF1andGammaWinProbOnly.spinBox.value())
 
 			create_test_assign.create_test_assignMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../test_assign.dat"))
-			#Fim dos Métodos
 			
+			os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value()) + "-train") )
+			classify_theta_train.classify_theta_trainMethod(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value()) + "-train", self.DefiningF1andGammaWinProbOnly.spinBox.value(), self.mainKSCWin.spinBox.value())
+			
+			os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value())) )
+			classify_theta.main(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value()), self.DefiningF1andGammaWinProbOnly.spinBox.value(), self.mainKSCWin.spinBox.value())
+			
+			#Fim dos Métodos
+
 			self.plainTextEditLog.appendPlainText("Done!\n")
 		else:
 			self.createErrorBox("All possible examples have already been generated")
