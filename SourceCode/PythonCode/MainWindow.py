@@ -17,6 +17,8 @@ import cluster
 import MainKSC
 import plot_members
 import SelectingAClusteringFolderPlot
+import classify_pts
+import DefiningF1AndGamma
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -120,7 +122,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClusteringPlotMenu = self.toolsClusteringMenu.addMenu("Plot")
 		self.toolsClusteringPlotMenuPlotAction = self.toolsClusteringPlotMenu.addAction("Plot Examples", self.openMainPlotExamples)
 		self.toolsClassifierMenu = self.toolsMenu.addMenu("Classifier")
-		self.toolsClassifierMenuProbAction = self.toolsClassifierMenu.addAction("Probability Only")
+		self.toolsClassifierMenuProbAction = self.toolsClassifierMenu.addAction("Probability Only", self.openMainClassifierProbOnly)
 		self.toolsClassifierMenuERTreeAction = self.toolsClassifierMenu.addAction("ERTree Only")
 		self.toolsClassifierMenuERTreeProbAction = self.toolsClassifierMenu.addAction("ERTree + Prob")
 		self.toolsClassifierMenuTrendLearnerAction = self.toolsClassifierMenu.addAction("TrendLearner")
@@ -309,6 +311,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.uploadFileButton.clicked.connect(self.openMainInput)
 		self.kscButton.clicked.connect(self.openMainKSC)
 		self.plotExamplesButton.clicked.connect(self.openMainPlotExamples)
+		self.probabilityOnlyButton.clicked.connect(self.openMainClassifierProbOnly)
+
 
 	def openMainInput(self):
 		self.mainInputWin = MainInput.Ui_Dialog(self)
@@ -323,31 +327,68 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.kscOkButtonPressed)
 
-	def openMainPlotExamples(self):
-		self.plainTextEditLog.appendPlainText("Ploting examples...")
-		self.selectingclusterfoldWin = SelectingAClusteringFolderPlot.Ui_Dialog()
-		self.selectingclusterfoldWin.show()
-		self.fillComboBox()
-		self.selectingclusterfoldWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
-		self.selectingclusterfoldWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainPlotExamplesOk)
+	def openMainClassifierProbOnly(self):
+		self.plainTextEditLog.appendPlainText("Classifying...")
+		self.DefiningF1andGammaWinProbOnly = DefiningF1AndGamma.Ui_Dialog()
+		self.DefiningF1andGammaWinProbOnly.show()
+		self.fillComboBoxClassProbOnly()
+		self.DefiningF1andGammaWinProbOnly.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.DefiningF1andGammaWinProbOnly.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainClassifierProbOnlyOk)
 
-	def openMainPlotExamplesOk(self):
-		if str(self.selectingclusterfoldWin.comboBox.currentText()) != "":
-			plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.selectingclusterfoldWin.comboBox.currentText())), "Examples")
+
+	def openMainClassifierProbOnlyOk(self):
+		if str(self.DefiningF1andGammaWinProbOnly.comboBox.currentText()) != "":
+			plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.DefiningF1andGammaWinProbOnly.comboBox.currentText())), "Classifiers")
+			try:
+				os.makedirs(plotfolder)
+			except:
+				pass
+			plotfolder = os.path.join(plotfolder,"ProbOnly")
 			os.makedirs(plotfolder)
-			plot_members.plotExamples(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/" +str(self.selectingclusterfoldWin.comboBox.currentText()) + "/assign.dat", self.projectDirectory + "/" + str(self.selectingclusterfoldWin.comboBox.currentText()) + "/cents.dat", plotfolder)
+			os.makedirs( os.path.join(plotfolder, "probs") )
+
+			#Chamar Métodos Aqui
+			classify_pts.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/train.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs"), self.DefiningF1andGammaWinProbOnly.spinBox.value())
+			
+			#Fim dos Métodos
 			self.plainTextEditLog.appendPlainText("Done!\n")
 		else:
 			self.createErrorBox("All possible examples have already been generated")
 
-	def fillComboBox(self):
+	def openMainPlotExamples(self):
+		self.plainTextEditLog.appendPlainText("Ploting examples...")
+		self.selectingclusterfoldWinPlot = SelectingAClusteringFolderPlot.Ui_Dialog()
+		self.selectingclusterfoldWinPlot.show()
+		self.fillComboBoxPlot()
+		self.selectingclusterfoldWinPlot.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.selectingclusterfoldWinPlot.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainPlotExamplesOk)
+
+	def openMainPlotExamplesOk(self):
+		if str(self.selectingclusterfoldWinPlot.comboBox.currentText()) != "":
+			plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.selectingclusterfoldWinPlot.comboBox.currentText())), "Examples")
+			os.makedirs(plotfolder)
+			plot_members.plotExamples(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/" +str(self.selectingclusterfoldWinPlot.comboBox.currentText()) + "/assign.dat", self.projectDirectory + "/" + str(self.selectingclusterfoldWinPlot.comboBox.currentText()) + "/cents.dat", plotfolder)
+			self.plainTextEditLog.appendPlainText("Done!\n")
+		else:
+			self.createErrorBox("All possible examples have already been generated")
+
+	def fillComboBoxPlot(self):
 		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
 		self.auxVetor = []
 		for self.dirname in self.dirs:
 			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Examples")) ):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
-		self.selectingclusterfoldWin.comboBox.addItems(self.auxVetor)
+		self.selectingclusterfoldWinPlot.comboBox.addItems(self.auxVetor)
+
+	def fillComboBoxClassProbOnly(self):
+		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
+		self.auxVetor = []
+		for self.dirname in self.dirs:
+			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "ProbOnly")) ):
+				self.auxVetor.append(self.dirname)
+		self.auxVetor.sort()
+		self.DefiningF1andGammaWinProbOnly.comboBox.addItems(self.auxVetor)
 
 	def CancelButtonPressed(self):
 		self.plainTextEditLog.appendPlainText("Canceled!\n")
