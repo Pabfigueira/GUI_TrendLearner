@@ -39,7 +39,7 @@ def clusterKSC(tseries_fpath, base_folder, k):
 
     cent, assign, shift, dists_cent = ksc.inc_ksc(X, k)
 
-    base_folder = os.path.join(os.path.join(base_folder,'..'),"Clustering")
+    base_folder = os.path.join(os.path.join(base_folder,'..'),"Clustering_KSC")
 
     os.makedirs(base_folder)
 

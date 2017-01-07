@@ -16,6 +16,7 @@ import os
 import cluster
 import MainKSC
 import plot_members
+import SelectingAClusteringFolderPlot
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -319,19 +320,36 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.mainKSCWin = MainKSC.Ui_Dialog(self)
 		self.mainKSCWin.show()
 		self.plainTextEditLog.appendPlainText("Clustering...")
-		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.kscCancelButtonPressed)
+		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.kscOkButtonPressed)
 
 	def openMainPlotExamples(self):
 		self.plainTextEditLog.appendPlainText("Ploting examples...")
-		plotfolder = os.path.join(os.path.join(self.projectDirectory,"Clustering"), "Examples")
-		os.makedirs(plotfolder)
-		plot_members.plotExamples(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Clustering/assign.dat", self.projectDirectory + "/Clustering/cents.dat", plotfolder)
-		self.plotExamplesButton.setDisabled(True)
-		self.toolsClusteringPlotMenuPlotAction.setDisabled(True)
-		self.plainTextEditLog.appendPlainText("Done!\n")
+		self.selectingclusterfoldWin = SelectingAClusteringFolderPlot.Ui_Dialog()
+		self.selectingclusterfoldWin.show()
+		self.fillComboBox()
+		self.selectingclusterfoldWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.selectingclusterfoldWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainPlotExamplesOk)
 
-	def kscCancelButtonPressed(self):
+	def openMainPlotExamplesOk(self):
+		if str(self.selectingclusterfoldWin.comboBox.currentText()) != "":
+			plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.selectingclusterfoldWin.comboBox.currentText())), "Examples")
+			os.makedirs(plotfolder)
+			plot_members.plotExamples(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/" +str(self.selectingclusterfoldWin.comboBox.currentText()) + "/assign.dat", self.projectDirectory + "/" + str(self.selectingclusterfoldWin.comboBox.currentText()) + "/cents.dat", plotfolder)
+			self.plainTextEditLog.appendPlainText("Done!\n")
+		else:
+			self.createErrorBox("All possible examples have already been generated")
+
+	def fillComboBox(self):
+		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
+		self.auxVetor = []
+		for self.dirname in self.dirs:
+			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Examples")) ):
+				self.auxVetor.append(self.dirname)
+		self.auxVetor.sort()
+		self.selectingclusterfoldWin.comboBox.addItems(self.auxVetor)
+
+	def CancelButtonPressed(self):
 		self.plainTextEditLog.appendPlainText("Canceled!\n")
 
 	def kscOkButtonPressed(self):
@@ -396,8 +414,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		msg.setWindowTitle("Erro")
 		msg.setStandardButtons(QtGui.QMessageBox.Ok)	
 		retval = msg.exec_()
-
-	
+		
 
 if __name__ == '__main__':
 	app = QtGui.QApplication(sys.argv)
