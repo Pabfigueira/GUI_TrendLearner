@@ -23,6 +23,7 @@ import classify_pts_test
 import create_test_assign
 import classify_theta_train
 import classify_theta
+import multimodel_class
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -365,11 +366,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value())) )
 			classify_theta.main(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value()), self.DefiningF1andGammaWinProbOnly.spinBox.value(), self.mainKSCWin.spinBox.value())
 			
+			multimodel_class.calcProbOnly(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaWinProbOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaWinProbOnly.spinBox.value()), self.DefiningF1andGammaWinProbOnly.spinBox.value())
 			#Fim dos Métodos
 
 			self.plainTextEditLog.appendPlainText("Done!\n")
 		else:
-			self.createErrorBox("All possible examples have already been generated")
+			self.createErrorBox("All possible classifications have already been generated")
 
 	def openMainPlotExamples(self):
 		self.plainTextEditLog.appendPlainText("Ploting examples...")
