@@ -96,6 +96,20 @@ def run_classifier(out_folder, trend_probs, referrers, y, train, test):
 	#y_pred = stack_clf.predict(F[test], trend_probs[test])
 	#save_results(out_folder, 'meta-stack-svm', y_pred)
 
+def run_classifierERTreeOnly(out_folder, trend_probs, referrers, y, train, test):
+
+	F = referrers #static features
+	etree = create_grid_search('lr', n_jobs = 1)
+	
+	y_pred = trend_probs[test].argmax(axis=1)
+	#save_results(out_folder, 'tl-base-lr', y_pred, y[test])
+
+	aux = clone(etree)
+	aux.fit(F[train], y[train])
+	y_pred = aux.predict(F[test])
+	save_results(out_folder, 'tree-feats', y_pred, y[test])
+
+
 def run_classifierProbOnly(out_folder, trend_probs, y, train, test):
 
 	etree = create_grid_search('lr', n_jobs = 1)
@@ -103,7 +117,7 @@ def run_classifierProbOnly(out_folder, trend_probs, y, train, test):
 	y_pred = trend_probs[test].argmax(axis=1)
 	save_results(out_folder, 'tl-base-lr', y_pred, y[test])
 
-def run_one_folder(features_folder, fold_folder, results_name, gamma_max):
+def run_one_folder(features_folder, fold_folder, results_name, gamma_max, kindofType):
 
 	#File paths
 	best_by_test_fpath = os.path.join(fold_folder, results_name,
@@ -116,12 +130,11 @@ def run_one_folder(features_folder, fold_folder, results_name, gamma_max):
 	all_conf_train_fpath = os.path.join(fold_folder, results_name + '-train',
 			'all-conf.dat')
 	
-	ytest_fpath = os.path.join(fold_folder, 'ksc', 'test_assign.dat')
-	ytrain_fpath = os.path.join(fold_folder, 'ksc', 'assign.dat')
+	ytest_fpath = os.path.join(fold_folder, '..', '..', 'test_assign.dat')
+	ytrain_fpath = os.path.join(fold_folder, '..', '..', 'assign.dat')
 	
-	test_fpath = os.path.join(fold_folder, 'test.dat')
-	train_fpath = os.path.join(fold_folder, 'train.dat')
-	tags_fpath = os.path.join(features_folder, 'tags.dat')
+	test_fpath = os.path.join(fold_folder, '..', '..', '..', 'Data', 'test.dat')
+	train_fpath = os.path.join(fold_folder, '..', '..', '..', 'Data', 'train.dat')
 	
 	#Loading Matrices
 	best_by_test = np.genfromtxt(best_by_test_fpath)
@@ -163,8 +176,8 @@ def run_one_folder(features_folder, fold_folder, results_name, gamma_max):
 	referrers = load_features(features_folder, best_by, gamma_max)
 
 	#Actual test, ufa
-	run_classifier(os.path.join(fold_folder, results_name), 
-			trend_probs, referrers, y_true, train, test)
+	if kindofType == "ERTreeOnly":
+		run_classifierERTreeOnly(os.path.join(fold_folder, results_name), trend_probs, referrers, y_true, train, test)
 
 def run_one_folder_ProbOnly(fold_folder, results_name, gamma_max):
 
@@ -225,14 +238,17 @@ def run_one_folder_ProbOnly(fold_folder, results_name, gamma_max):
 	#Actual test, ufa
 	run_classifierProbOnly(os.path.join(fold_folder, results_name), trend_probs, y_true, train, test)
 
-@plac.annotations(
-		#features_folder=plac.Annotation('Folder with features', type=str),
+'''@plac.annotations(
+		features_folder=plac.Annotation('Folder with features', type=str),
 		fold_folder=plac.Annotation('Folder with the train and test data', type=str),
 		results_name=plac.Annotation('Base name of the results folder', type=str),
-		gamma_max=plac.Annotation('Gamma Max', type=int))
+		gamma_max=plac.Annotation('Gamma Max', type=int))'''
 
 def calcProbOnly(fold_folder, results_name, gamma_max):
 	run_one_folder_ProbOnly(fold_folder, results_name, gamma_max)
+
+def calcERTreeOnly(features_folder, fold_folder, results_name, gamma_max):
+	run_one_folder(features_folder, fold_folder, results_name, gamma_max, "ERTreeOnly")
 
 '''def main(features_folder, fold_folder, results_name, gamma_max):
 	run_one_folder(features_folder, fold_folder, results_name, gamma_max)'''

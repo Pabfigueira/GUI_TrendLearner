@@ -19,11 +19,13 @@ import plot_members
 import SelectingAClusteringFolderPlot
 import classify_pts
 import DefiningF1AndGamma
+import DefiningF1AndGammaAndFeatures
 import classify_pts_test
 import create_test_assign
 import classify_theta_train
 import classify_theta
 import multimodel_class
+import testingFeaturesFile
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -128,7 +130,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClusteringPlotMenuPlotAction = self.toolsClusteringPlotMenu.addAction("Plot Examples", self.openMainPlotExamples)
 		self.toolsClassifierMenu = self.toolsMenu.addMenu("Classifier")
 		self.toolsClassifierMenuProbAction = self.toolsClassifierMenu.addAction("Probability Only", self.openMainClassifierProbOnly)
-		self.toolsClassifierMenuERTreeAction = self.toolsClassifierMenu.addAction("ERTree Only")
+		self.toolsClassifierMenuERTreeAction = self.toolsClassifierMenu.addAction("ERTree Only", self.openMainClassifierERTreeOnly)
 		self.toolsClassifierMenuERTreeProbAction = self.toolsClassifierMenu.addAction("ERTree + Prob")
 		self.toolsClassifierMenuTrendLearnerAction = self.toolsClassifierMenu.addAction("TrendLearner")
 
@@ -317,6 +319,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.kscButton.clicked.connect(self.openMainKSC)
 		self.plotExamplesButton.clicked.connect(self.openMainPlotExamples)
 		self.probabilityOnlyButton.clicked.connect(self.openMainClassifierProbOnly)
+		self.ertreeOnlyButton.clicked.connect(self.openMainClassifierERTreeOnly)
 
 
 	def openMainInput(self):
@@ -373,6 +376,56 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		else:
 			self.createErrorBox("All possible classifications have already been generated")
 
+	def openMainClassifierERTreeOnly(self):
+		self.plainTextEditLog.appendPlainText("Classifying...")
+		self.DefiningF1andGammaAndFeaturesWinERTreeOnly = DefiningF1AndGammaAndFeatures.Ui_Dialog()
+		self.DefiningF1andGammaAndFeaturesWinERTreeOnly.show()
+		self.fillComboBoxClassERTreeOnly()
+		self.DefiningF1andGammaAndFeaturesWinERTreeOnly.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.DefiningF1andGammaAndFeaturesWinERTreeOnly.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainClassifierERTreeOnlyOk)
+
+	def openMainClassifierERTreeOnlyOk(self):
+		if str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.comboBox.currentText()) != "":
+			if not self.DefiningF1andGammaAndFeaturesWinERTreeOnly.lineEdit.text().isEmpty():
+				plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.comboBox.currentText())), "Classifiers")
+				try:
+					os.makedirs(plotfolder)
+				except:
+					pass
+				plotfolder = os.path.join(plotfolder,"ERTreeOnly")
+				os.makedirs(plotfolder)
+
+				#Chamar Métodos Aqui
+				os.makedirs( os.path.join(plotfolder, "probs") )
+				classify_pts.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/train.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs"), self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value())
+				
+				os.makedirs( os.path.join(plotfolder, "probs-test") )
+				classify_pts_test.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", os.path.join(plotfolder,"../../cents.dat"), self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs-test"), self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value())
+
+				create_test_assign.create_test_assignMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../test_assign.dat"))
+				
+				os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()) + "-train") )
+				classify_theta_train.classify_theta_trainMethod(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()) + "-train", self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value(), self.mainKSCWin.spinBox.value())
+				
+				os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value())) )
+				classify_theta.main(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value(), self.mainKSCWin.spinBox.value())
+				
+				if testingFeaturesFile.testOne(unicode(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()):
+					multimodel_class.calcERTreeOnly(unicode(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value())
+					self.plainTextEditLog.appendPlainText("Done!\n")
+				else:
+					self.createErrorBox("Ferrou MERMão.\n\nApague toda a Pasta")
+					self.plainTextEditLog.appendPlainText("Interrupted!\n")
+				#Fim dos Métodos
+			else:
+				self.createErrorBox("You need provide a features directory folder")
+				self.plainTextEditLog.appendPlainText("Interrupted!\n")
+		else:
+			self.createErrorBox("All possible classifications have already been generated")
+			self.plainTextEditLog.appendPlainText("Interrupted!\n")
+
+
+
 	def openMainPlotExamples(self):
 		self.plainTextEditLog.appendPlainText("Ploting examples...")
 		self.selectingclusterfoldWinPlot = SelectingAClusteringFolderPlot.Ui_Dialog()
@@ -407,6 +460,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
 		self.DefiningF1andGammaWinProbOnly.comboBox.addItems(self.auxVetor)
+
+	def fillComboBoxClassERTreeOnly(self):
+		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
+		self.auxVetor = []
+		for self.dirname in self.dirs:
+			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "ERTreeOnly")) ):
+				self.auxVetor.append(self.dirname)
+		self.auxVetor.sort()
+		self.DefiningF1andGammaAndFeaturesWinERTreeOnly.comboBox.addItems(self.auxVetor)
 
 	def CancelButtonPressed(self):
 		self.plainTextEditLog.appendPlainText("Canceled!\n")
@@ -474,6 +536,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		msg.setStandardButtons(QtGui.QMessageBox.Ok)	
 		retval = msg.exec_()
 		
+
 
 if __name__ == '__main__':
 	app = QtGui.QApplication(sys.argv)
