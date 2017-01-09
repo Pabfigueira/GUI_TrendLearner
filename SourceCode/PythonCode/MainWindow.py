@@ -127,7 +127,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClusteringClusteringMenu = self.toolsClusteringMenu.addMenu("Clustering")
 		self.toolsClusteringClusteringMenuKSCAction = self.toolsClusteringClusteringMenu.addAction("K-SC", self.openMainKSC)
 		self.toolsClusteringQualityMenu = self.toolsClusteringMenu.addMenu("Quality")
-		self.toolsClusteringQualityMenuBetaCVAction = self.toolsClusteringQualityMenu.addAction("BetaCV")
+		self.toolsClusteringQualityMenuBetaCVAction = self.toolsClusteringQualityMenu.addAction("BetaCV", self.openMainQualityBCV)
 		self.toolsClusteringQualityMenuSilhouetteAction = self.toolsClusteringQualityMenu.addAction(_fromUtf8("Silhouette Index"))
 		self.toolsClusteringPlotMenu = self.toolsClusteringMenu.addMenu("Plot")
 		self.toolsClusteringPlotMenuPlotAction = self.toolsClusteringPlotMenu.addAction("Plot Examples", self.openMainPlotExamples)
@@ -655,11 +655,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		#Butões
 		self.kscButton.setDisabled(False)
 		self.bcvButton.setDisabled(False)
-		self.silhouetteButton.setDisabled(False)
+		#self.silhouetteButton.setDisabled(False)
 		#Menus
 		self.toolsClusteringClusteringMenuKSCAction.setDisabled(False)
 		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(False)
-		self.toolsClusteringQualityMenuSilhouetteAction.setDisabled(False)
+		#self.toolsClusteringQualityMenuSilhouetteAction.setDisabled(False)
 		
 
 	def createErrorBox(self,notification):
