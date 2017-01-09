@@ -26,6 +26,9 @@ import classify_theta_train
 import classify_theta
 import multimodel_class
 import testingFeaturesFile
+import plot_quality
+import MainBCV
+import shutil
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -322,6 +325,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.ertreeOnlyButton.clicked.connect(self.openMainClassifierERTreeOnly)
 		self.ertreePButton.clicked.connect(self.openMainClassifierERTreeP)
 		self.trendLearnerButton.clicked.connect(self.openMainClassifierTrendLearner)
+		self.bcvButton.clicked.connect(self.openMainQualityBCV)
 
 
 	def openMainInput(self):
@@ -337,6 +341,23 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
 		self.mainKSCWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.kscOkButtonPressed)
 
+	def openMainQualityBCV(self):
+		self.plainTextEditLog.appendPlainText("Generating quality...")
+		self.mainBCVWin = MainBCV.Ui_Dialog(self)
+		self.mainBCVWin.show()
+		self.mainBCVWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.mainBCVWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.bcvOkButtonPressed)
+
+
+	def bcvOkButtonPressed(self):
+		plotfolder = os.path.join(self.projectDirectory, "BCV")
+		os.makedirs(plotfolder)
+		plot_quality.main(os.path.join(self.projectDirectory, "Data", "Input.txt"), plotfolder, self.mainBCVWin.spinBox.value())
+		self.bcvButton.setDisabled(True)
+		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(True)
+		self.plainTextEditLog.appendPlainText("Done!\n")
+
+
 	def openMainClassifierProbOnly(self):
 		self.plainTextEditLog.appendPlainText("Classifying...")
 		self.DefiningF1andGammaWinProbOnly = DefiningF1AndGamma.Ui_Dialog()
@@ -344,7 +365,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.fillComboBoxClassProbOnly()
 		self.DefiningF1andGammaWinProbOnly.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
 		self.DefiningF1andGammaWinProbOnly.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainClassifierProbOnlyOk)
-
 
 	def openMainClassifierProbOnlyOk(self):
 		if str(self.DefiningF1andGammaWinProbOnly.comboBox.currentText()) != "":
@@ -416,7 +436,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 					multimodel_class.calcERTreeOnly(unicode(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeOnly.spinBox.value())
 					self.plainTextEditLog.appendPlainText("Done!\n")
 				else:
-					self.createErrorBox("Ferrou MERMão.\n\nApague toda a Pasta")
+					self.createErrorBox('The operation can not be completed because the files in features directory are in incompatible format.\n\nCheck Help contents to see the correct format.')
+					shutil.rmtree(plotfolder)
 					self.plainTextEditLog.appendPlainText("Interrupted!\n")
 				#Fim dos Métodos
 			else:
@@ -426,8 +447,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			self.createErrorBox("All possible classifications have already been generated")
 			self.plainTextEditLog.appendPlainText("Interrupted!\n")
 
-
-
 	def openMainClassifierERTreeP(self):
 		self.plainTextEditLog.appendPlainText("Classifying...")
 		self.DefiningF1andGammaAndFeaturesWinERTreeP = DefiningF1AndGammaAndFeatures.Ui_Dialog()
@@ -435,7 +454,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.fillComboBoxClassERTreeP()
 		self.DefiningF1andGammaAndFeaturesWinERTreeP.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
 		self.DefiningF1andGammaAndFeaturesWinERTreeP.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainClassifierERTreePOk)
-
 
 	def openMainClassifierERTreePOk(self):
 		if str(self.DefiningF1andGammaAndFeaturesWinERTreeP.comboBox.currentText()) != "":
