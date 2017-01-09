@@ -57,7 +57,7 @@ def save_results(out_folder, base_name, y_pred, y_true):
 	with open(os.path.join(folder, 'summ.dat'), 'w') as summ_file:
 		print(classification_report(y_true, y_pred), file=summ_file)
 
-def run_classifier(out_folder, trend_probs, referrers, y, train, test):
+'''def run_classifier(out_folder, trend_probs, referrers, y, train, test):
 
 	F = referrers #static features
 	etree = create_grid_search('lr', n_jobs = 1)
@@ -94,7 +94,49 @@ def run_classifier(out_folder, trend_probs, referrers, y, train, test):
 	#stack_clf = stacking.Stacking(3, [etree], 'deco')
 	#stack_clf.fit(F[train], y[train], trend_probs[train])
 	#y_pred = stack_clf.predict(F[test], trend_probs[test])
-	#save_results(out_folder, 'meta-stack-svm', y_pred)
+	#save_results(out_folder, 'meta-stack-svm', y_pred)'''
+
+def run_classifierTrendLearner(out_folder, trend_probs, referrers, y, train, test):
+
+	F = referrers #static features
+	etree = create_grid_search('lr', n_jobs = 1)
+	
+	y_pred = trend_probs[test].argmax(axis=1)
+	#save_results(out_folder, 'tl-base-lr', y_pred, y[test])
+
+	aux = clone(etree)
+	aux.fit(F[train], y[train])
+	y_pred = aux.predict(F[test])
+	#save_results(out_folder, 'tree-feats', y_pred, y[test])
+	
+	aux = clone(etree)
+	aux.fit(trend_probs[train], y[train])
+	y_pred = aux.predict(trend_probs[test])
+	#save_results(out_folder, 'tree-probs', y_pred, y[test])
+	
+	C = np.hstack((F, trend_probs))
+	aux = clone(etree)
+	aux.fit(C[train], y[train])
+	y_pred = aux.predict(C[test])
+	save_results(out_folder, 'meta-combine', y_pred, y[test])
+
+def run_classifierERTreeP(out_folder, trend_probs, referrers, y, train, test):
+
+	F = referrers #static features
+	etree = create_grid_search('lr', n_jobs = 1)
+	
+	y_pred = trend_probs[test].argmax(axis=1)
+	#save_results(out_folder, 'tl-base-lr', y_pred, y[test])
+
+	aux = clone(etree)
+	aux.fit(F[train], y[train])
+	y_pred = aux.predict(F[test])
+	#save_results(out_folder, 'tree-feats', y_pred, y[test])
+	
+	aux = clone(etree)
+	aux.fit(trend_probs[train], y[train])
+	y_pred = aux.predict(trend_probs[test])
+	save_results(out_folder, 'tree-probs', y_pred, y[test])
 
 def run_classifierERTreeOnly(out_folder, trend_probs, referrers, y, train, test):
 
@@ -109,13 +151,13 @@ def run_classifierERTreeOnly(out_folder, trend_probs, referrers, y, train, test)
 	y_pred = aux.predict(F[test])
 	save_results(out_folder, 'tree-feats', y_pred, y[test])
 
-
 def run_classifierProbOnly(out_folder, trend_probs, y, train, test):
 
 	etree = create_grid_search('lr', n_jobs = 1)
 	
 	y_pred = trend_probs[test].argmax(axis=1)
 	save_results(out_folder, 'tl-base-lr', y_pred, y[test])
+
 
 def run_one_folder(features_folder, fold_folder, results_name, gamma_max, kindofType):
 
@@ -178,6 +220,10 @@ def run_one_folder(features_folder, fold_folder, results_name, gamma_max, kindof
 	#Actual test, ufa
 	if kindofType == "ERTreeOnly":
 		run_classifierERTreeOnly(os.path.join(fold_folder, results_name), trend_probs, referrers, y_true, train, test)
+	elif kindofType == "ERTreeP":
+		run_classifierERTreeP(os.path.join(fold_folder, results_name), trend_probs, referrers, y_true, train, test)
+	elif kindofType == "TrendLearner":
+		run_classifierTrendLearner(os.path.join(fold_folder, results_name), trend_probs, referrers, y_true, train, test)
 
 def run_one_folder_ProbOnly(fold_folder, results_name, gamma_max):
 
@@ -250,8 +296,8 @@ def calcProbOnly(fold_folder, results_name, gamma_max):
 def calcERTreeOnly(features_folder, fold_folder, results_name, gamma_max):
 	run_one_folder(features_folder, fold_folder, results_name, gamma_max, "ERTreeOnly")
 
-'''def main(features_folder, fold_folder, results_name, gamma_max):
-	run_one_folder(features_folder, fold_folder, results_name, gamma_max)'''
+def calcERTreeP(features_folder, fold_folder, results_name, gamma_max):
+	run_one_folder(features_folder, fold_folder, results_name, gamma_max, "ERTreeP")
 
-
-
+def calcTrendLearner(features_folder, fold_folder, results_name, gamma_max):
+	run_one_folder(features_folder, fold_folder, results_name, gamma_max, "TrendLearner")

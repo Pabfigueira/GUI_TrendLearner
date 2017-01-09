@@ -131,8 +131,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClassifierMenu = self.toolsMenu.addMenu("Classifier")
 		self.toolsClassifierMenuProbAction = self.toolsClassifierMenu.addAction("Probability Only", self.openMainClassifierProbOnly)
 		self.toolsClassifierMenuERTreeAction = self.toolsClassifierMenu.addAction("ERTree Only", self.openMainClassifierERTreeOnly)
-		self.toolsClassifierMenuERTreeProbAction = self.toolsClassifierMenu.addAction("ERTree + Prob")
-		self.toolsClassifierMenuTrendLearnerAction = self.toolsClassifierMenu.addAction("TrendLearner")
+		self.toolsClassifierMenuERTreeProbAction = self.toolsClassifierMenu.addAction("ERTree + Prob", self.openMainClassifierERTreeP)
+		self.toolsClassifierMenuTrendLearnerAction = self.toolsClassifierMenu.addAction("TrendLearner", self.openMainClassifierTrendLearner)
 
 
 		self.viewMenu = self.menubar.addMenu('&View')
@@ -320,6 +320,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.plotExamplesButton.clicked.connect(self.openMainPlotExamples)
 		self.probabilityOnlyButton.clicked.connect(self.openMainClassifierProbOnly)
 		self.ertreeOnlyButton.clicked.connect(self.openMainClassifierERTreeOnly)
+		self.ertreePButton.clicked.connect(self.openMainClassifierERTreeP)
+		self.trendLearnerButton.clicked.connect(self.openMainClassifierTrendLearner)
 
 
 	def openMainInput(self):
@@ -426,6 +428,103 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 
 
+	def openMainClassifierERTreeP(self):
+		self.plainTextEditLog.appendPlainText("Classifying...")
+		self.DefiningF1andGammaAndFeaturesWinERTreeP = DefiningF1AndGammaAndFeatures.Ui_Dialog()
+		self.DefiningF1andGammaAndFeaturesWinERTreeP.show()
+		self.fillComboBoxClassERTreeP()
+		self.DefiningF1andGammaAndFeaturesWinERTreeP.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.DefiningF1andGammaAndFeaturesWinERTreeP.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainClassifierERTreePOk)
+
+
+	def openMainClassifierERTreePOk(self):
+		if str(self.DefiningF1andGammaAndFeaturesWinERTreeP.comboBox.currentText()) != "":
+			if not self.DefiningF1andGammaAndFeaturesWinERTreeP.lineEdit.text().isEmpty():
+				plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.DefiningF1andGammaAndFeaturesWinERTreeP.comboBox.currentText())), "Classifiers")
+				try:
+					os.makedirs(plotfolder)
+				except:
+					pass
+				plotfolder = os.path.join(plotfolder,"ERTreeP")
+				os.makedirs(plotfolder)
+
+				#Chamar Métodos Aqui
+				os.makedirs( os.path.join(plotfolder, "probs") )
+				classify_pts.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/train.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs"), self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value())
+				
+				os.makedirs( os.path.join(plotfolder, "probs-test") )
+				classify_pts_test.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", os.path.join(plotfolder,"../../cents.dat"), self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs-test"), self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value())
+
+				create_test_assign.create_test_assignMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../test_assign.dat"))
+				
+				os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()) + "-train") )
+				classify_theta_train.classify_theta_trainMethod(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()) + "-train", self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value(), self.mainKSCWin.spinBox.value())
+				
+				os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value())) )
+				classify_theta.main(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value(), self.mainKSCWin.spinBox.value())
+				
+				if testingFeaturesFile.testOne(unicode(self.DefiningF1andGammaAndFeaturesWinERTreeP.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()):
+					multimodel_class.calcERTreeP(unicode(self.DefiningF1andGammaAndFeaturesWinERTreeP.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value())
+					self.plainTextEditLog.appendPlainText("Done!\n")
+				else:
+					self.createErrorBox("Ferrou MERMão.\n\nApague toda a Pasta")
+					self.plainTextEditLog.appendPlainText("Interrupted!\n")
+				#Fim dos Métodos
+			else:
+				self.createErrorBox("You need provide a features directory folder")
+				self.plainTextEditLog.appendPlainText("Interrupted!\n")
+		else:
+			self.createErrorBox("All possible classifications have already been generated")
+			self.plainTextEditLog.appendPlainText("Interrupted!\n")
+
+	def openMainClassifierTrendLearner(self):
+		self.plainTextEditLog.appendPlainText("Classifying...")
+		self.DefiningF1andGammaAndFeaturesWinTrendLearner = DefiningF1AndGammaAndFeatures.Ui_Dialog()
+		self.DefiningF1andGammaAndFeaturesWinTrendLearner.show()
+		self.fillComboBoxClassTrendLearner()
+		self.DefiningF1andGammaAndFeaturesWinTrendLearner.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
+		self.DefiningF1andGammaAndFeaturesWinTrendLearner.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.openMainClassifierTrendLearnerOk)
+
+	def openMainClassifierTrendLearnerOk(self):
+		if str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.comboBox.currentText()) != "":
+			if not self.DefiningF1andGammaAndFeaturesWinTrendLearner.lineEdit.text().isEmpty():
+				plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.comboBox.currentText())), "Classifiers")
+				try:
+					os.makedirs(plotfolder)
+				except:
+					pass
+				plotfolder = os.path.join(plotfolder,"TrendLearner")
+				os.makedirs(plotfolder)
+
+				#Chamar Métodos Aqui
+				os.makedirs( os.path.join(plotfolder, "probs") )
+				classify_pts.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/train.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs"), self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value())
+				
+				os.makedirs( os.path.join(plotfolder, "probs-test") )
+				classify_pts_test.classifyPtsMethod(self.projectDirectory + "/Data/Input.txt", os.path.join(plotfolder,"../../cents.dat"), self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../assign.dat"), os.path.join(plotfolder,"probs-test"), self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value())
+
+				create_test_assign.create_test_assignMethod(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/test.dat", os.path.join(plotfolder,"../../cents.dat"), os.path.join(plotfolder,"../../test_assign.dat"))
+				
+				os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()) + "-train") )
+				classify_theta_train.classify_theta_trainMethod(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()) + "-train", self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value(), self.mainKSCWin.spinBox.value())
+				
+				os.makedirs( os.path.join(plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value())) )
+				classify_theta.main(self.projectDirectory + "/Data/Input.txt", plotfolder , self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value(), "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value(), self.mainKSCWin.spinBox.value())
+				
+				if testingFeaturesFile.testOne(unicode(self.DefiningF1andGammaAndFeaturesWinTrendLearner.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()):
+					multimodel_class.calcTrendLearner(unicode(self.DefiningF1andGammaAndFeaturesWinTrendLearner.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value())
+					self.plainTextEditLog.appendPlainText("Done!\n")
+				else:
+					self.createErrorBox("Ferrou MERMão.\n\nApague toda a Pasta")
+					self.plainTextEditLog.appendPlainText("Interrupted!\n")
+				#Fim dos Métodos
+			else:
+				self.createErrorBox("You need provide a features directory folder")
+				self.plainTextEditLog.appendPlainText("Interrupted!\n")
+		else:
+			self.createErrorBox("All possible classifications have already been generated")
+			self.plainTextEditLog.appendPlainText("Interrupted!\n")
+
 	def openMainPlotExamples(self):
 		self.plainTextEditLog.appendPlainText("Ploting examples...")
 		self.selectingclusterfoldWinPlot = SelectingAClusteringFolderPlot.Ui_Dialog()
@@ -460,6 +559,24 @@ class Ui_MainWindow(QtGui.QMainWindow):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
 		self.DefiningF1andGammaWinProbOnly.comboBox.addItems(self.auxVetor)
+
+	def fillComboBoxClassERTreeP(self):
+		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
+		self.auxVetor = []
+		for self.dirname in self.dirs:
+			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "ERTreeP")) ):
+				self.auxVetor.append(self.dirname)
+		self.auxVetor.sort()
+		self.DefiningF1andGammaAndFeaturesWinERTreeP.comboBox.addItems(self.auxVetor)
+
+	def fillComboBoxClassTrendLearner(self):
+		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
+		self.auxVetor = []
+		for self.dirname in self.dirs:
+			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "TrendLearner")) ):
+				self.auxVetor.append(self.dirname)
+		self.auxVetor.sort()
+		self.DefiningF1andGammaAndFeaturesWinTrendLearner.comboBox.addItems(self.auxVetor)
 
 	def fillComboBoxClassERTreeOnly(self):
 		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
