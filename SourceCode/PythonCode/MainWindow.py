@@ -32,6 +32,7 @@ import shutil
 import textWidget
 import ViewInputFile
 import webbrowser
+import SelectingPDFFileToOpen
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -106,6 +107,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.dockWidgetContentsTop.addWidget(QtGui.QWidget())
 		self.dockWidgetContentsTop.addWidget(ViewInputFile.Ui_Form())
 		self.dockWidgetContentsTop.addWidget(textWidget.Ui_Form())
+		self.dockWidgetContentsTop.addWidget(SelectingPDFFileToOpen.Ui_Form())
 		## Fim Preenche Widgets
 
 		## FimTenta
@@ -360,6 +362,22 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		plot_quality.main(os.path.join(self.projectDirectory, "Data", "Input.txt"), plotfolder, self.mainBCVWin.spinBox.value())
 		self.bcvButton.setDisabled(True)
 		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(True)
+
+		#Show
+		self.dockWidgetContentsTop.setCurrentIndex(3)
+		self.root, self.dirs, self.files = os.walk( os.path.join(self.projectDirectory, "BCV") ) .next()
+		self.auxVetor = []
+		for mfiles in self.files:
+			if mfiles[-4:] == ".pdf":
+				self.auxVetor.append(mfiles)
+		self.auxVetor.sort()
+		self.dockWidgetContentsTop.currentWidget().comboBox.clear()
+		self.dockWidgetContentsTop.currentWidget().comboBox.addItems(self.auxVetor)
+
+		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.openBCVPDF)
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
+		#FimShow
+		
 		self.plainTextEditLog.appendPlainText("Done!\n")
 
 
@@ -707,6 +725,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 	def setOneWidget(self):
 		self.dockWidgetContentsTop.setCurrentIndex(1)
+
+	def openBCVPDF(self):
+		filename = os.path.join(self.projectDirectory, "BCV", unicode(self.dockWidgetContentsTop.currentWidget().comboBox.currentText().toUtf8(), encoding="UTF-8"))
+		webbrowser.open(filename)
 
 	def openInputText(self):
 		filename = os.path.join(self.projectDirectory, "Data", "Input.txt") 
