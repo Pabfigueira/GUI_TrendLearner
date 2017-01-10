@@ -592,6 +592,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Examples")) ):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
+		self.selectingclusterfoldWinPlot.comboBox.clear()
 		self.selectingclusterfoldWinPlot.comboBox.addItems(self.auxVetor)
 
 	def fillComboBoxClassProbOnly(self):
@@ -601,6 +602,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "ProbOnly")) ):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
+		self.DefiningF1andGammaWinProbOnly.comboBox.clear()
 		self.DefiningF1andGammaWinProbOnly.comboBox.addItems(self.auxVetor)
 
 	def fillComboBoxClassERTreeP(self):
@@ -610,6 +612,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "ERTreeP")) ):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
+		self.DefiningF1andGammaAndFeaturesWinERTreeP.comboBox.clear()
 		self.DefiningF1andGammaAndFeaturesWinERTreeP.comboBox.addItems(self.auxVetor)
 
 	def fillComboBoxClassTrendLearner(self):
@@ -619,6 +622,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "TrendLearner")) ):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
+		self.DefiningF1andGammaAndFeaturesWinTrendLearner.comboBox.clear()
 		self.DefiningF1andGammaAndFeaturesWinTrendLearner.comboBox.addItems(self.auxVetor)
 
 	def fillComboBoxClassERTreeOnly(self):
@@ -628,6 +632,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			if( self.dirname[:11] == "Clustering_") and (not os.path.isdir( os.path.join(os.path.join(os.path.join(self.projectDirectory,self.dirname),"Classifiers"), "ERTreeOnly")) ):
 				self.auxVetor.append(self.dirname)
 		self.auxVetor.sort()
+		self.DefiningF1andGammaAndFeaturesWinERTreeOnly.comboBox.clear()
 		self.DefiningF1andGammaAndFeaturesWinERTreeOnly.comboBox.addItems(self.auxVetor)
 
 	def CancelButtonPressed(self):
