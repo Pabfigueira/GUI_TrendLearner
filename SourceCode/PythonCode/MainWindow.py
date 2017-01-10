@@ -33,6 +33,7 @@ import textWidget
 import ViewInputFile
 import webbrowser
 import SelectingPDFFileToOpen
+import SelectingPDFFileAndDatFileToOpen
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -108,6 +109,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.dockWidgetContentsTop.addWidget(ViewInputFile.Ui_Form())
 		self.dockWidgetContentsTop.addWidget(textWidget.Ui_Form())
 		self.dockWidgetContentsTop.addWidget(SelectingPDFFileToOpen.Ui_Form())
+		self.dockWidgetContentsTop.addWidget(SelectingPDFFileAndDatFileToOpen.Ui_Form())
 		## Fim Preenche Widgets
 
 		## FimTenta
@@ -641,6 +643,27 @@ class Ui_MainWindow(QtGui.QMainWindow):
 	def kscOkButtonPressed(self):
 		cluster.clusterKSC(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/Data/", self.mainKSCWin.spinBox.value())
 		self.setKscButtonDisabled()
+
+		#Show
+		self.dockWidgetContentsTop.setCurrentIndex(4)
+		self.root, self.dirs, self.files = os.walk( os.path.join(self.projectDirectory, "Clustering_KSC") ) .next()
+		self.auxVetorPDF = []
+		self.auxVetorDAT = []
+		for mfiles in self.files:
+			if mfiles[-4:] == ".pdf":
+				self.auxVetorPDF.append(mfiles)
+			elif mfiles[-4:] == ".dat":
+				self.auxVetorDAT.append(mfiles)
+		self.auxVetorPDF.sort()
+		self.auxVetorDAT.sort()
+		self.dockWidgetContentsTop.currentWidget().comboBox.clear()
+		self.dockWidgetContentsTop.currentWidget().comboBox.addItems(self.auxVetorPDF)
+		self.dockWidgetContentsTop.currentWidget().comboBox_2.clear()
+		self.dockWidgetContentsTop.currentWidget().comboBox_2.addItems(self.auxVetorDAT)
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
+		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.openKSCPDF)
+		#FimShow
+
 		self.plainTextEditLog.appendPlainText("Done!\n")
 
 	def checkOkButton(self):
@@ -733,6 +756,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 	def openBCVPDF(self):
 		filename = os.path.join(self.projectDirectory, "BCV", unicode(self.dockWidgetContentsTop.currentWidget().comboBox.currentText().toUtf8(), encoding="UTF-8"))
+		webbrowser.open(filename)
+
+	def openKSCPDF(self):
+		filename = os.path.join(self.projectDirectory, "Clustering_KSC", unicode(self.dockWidgetContentsTop.currentWidget().comboBox.currentText().toUtf8(), encoding="UTF-8"))
 		webbrowser.open(filename)
 
 	def openInputText(self):
