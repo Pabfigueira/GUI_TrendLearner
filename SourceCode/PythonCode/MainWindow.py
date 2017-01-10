@@ -29,6 +29,9 @@ import testingFeaturesFile
 import plot_quality
 import MainBCV
 import shutil
+import textWidget
+import ViewInputFile
+import webbrowser
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -67,13 +70,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.verticalLayoutTop.setObjectName(_fromUtf8("verticalLayoutTop"))
 		self.dockWidgetTop = QtGui.QDockWidget(self.centralwidget)
 		self.dockWidgetTop.setObjectName(_fromUtf8("dockWidgetTop"))
-		self.dockWidgetContentsTop = QtGui.QWidget()
+		self.dockWidgetContentsTop = QtGui.QStackedWidget()
 		self.dockWidgetContentsTop.setObjectName(_fromUtf8("dockWidgetContentsTop"))
-		self.gridLayoutTop = QtGui.QGridLayout(self.dockWidgetContentsTop)
-		self.gridLayoutTop.setObjectName(_fromUtf8("gridLayoutTop"))
-		self.verticalLayoutTopInside = QtGui.QVBoxLayout()
-		self.verticalLayoutTopInside.setObjectName(_fromUtf8("verticalLayoutTopInside"))
-		self.gridLayoutTop.addLayout(self.verticalLayoutTopInside, 0, 0, 1, 1)
+		# Isso é da area em branco no topo... Acredito que vá sair#
+		#self.gridLayoutTop = QtGui.QGridLayout(self.dockWidgetContentsTop)
+		#self.gridLayoutTop.setObjectName(_fromUtf8("gridLayoutTop"))
+		#self.verticalLayoutTopInside = QtGui.QVBoxLayout()
+		#self.verticalLayoutTopInside.setObjectName(_fromUtf8("verticalLayoutTopInside"))
+		#self.gridLayoutTop.addLayout(self.verticalLayoutTopInside, 0, 0, 1, 1)
+		# (FIM) Isso é da area em branco no topo... Acredito que vá sair#
 		self.dockWidgetTop.setWidget(self.dockWidgetContentsTop)
 		self.verticalLayoutTop.addWidget(self.dockWidgetTop)
 		self.gridLayoutCentral.addLayout(self.verticalLayoutTop, 0, 0, 1, 1)
@@ -97,12 +102,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.gridLayoutCentral.addLayout(self.verticalLayoutDown, 1, 0, 1, 1)
 		self.plainTextEditLog.appendPlainText("TrendLearnerApp started...\n")
 
-		## Temporário
-		self.plainTextEditLog2 = QtGui.QPlainTextEdit(self.dockWidgetContentsTop)
-		self.plainTextEditLog2.setObjectName(_fromUtf8("plainTextEditLog2"))
-		self.plainTextEditLog2.setReadOnly(True)
-		self.verticalLayoutTopInside.addWidget(self.plainTextEditLog2)
-		## FimTemporário
+		## Preenche Widgets
+		self.dockWidgetContentsTop.addWidget(QtGui.QWidget())
+		self.dockWidgetContentsTop.addWidget(ViewInputFile.Ui_Form())
+		self.dockWidgetContentsTop.addWidget(textWidget.Ui_Form())
+		## Fim Preenche Widgets
+
 		## FimTenta
 
 		# MenuBar
@@ -485,7 +490,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 					multimodel_class.calcERTreeP(unicode(self.DefiningF1andGammaAndFeaturesWinERTreeP.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinERTreeP.spinBox.value())
 					self.plainTextEditLog.appendPlainText("Done!\n")
 				else:
-					self.createErrorBox("Ferrou MERMão.\n\nApague toda a Pasta")
+					self.createErrorBox('The operation can not be completed because the files in features directory are in incompatible format.\n\nCheck Help contents to see the correct format.')
+					shutil.rmtree(plotfolder)
 					self.plainTextEditLog.appendPlainText("Interrupted!\n")
 				#Fim dos Métodos
 			else:
@@ -533,7 +539,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 					multimodel_class.calcTrendLearner(unicode(self.DefiningF1andGammaAndFeaturesWinTrendLearner.lineEdit.text().toUtf8(), encoding="UTF-8"), plotfolder, "cls-res-fitted-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.doubleSpinBox.value()) + "-" + str(self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value()), self.DefiningF1andGammaAndFeaturesWinTrendLearner.spinBox.value())
 					self.plainTextEditLog.appendPlainText("Done!\n")
 				else:
-					self.createErrorBox("Ferrou MERMão.\n\nApague toda a Pasta")
+					self.createErrorBox('The operation can not be completed because the files in features directory are in incompatible format.\n\nCheck Help contents to see the correct format.')
+					shutil.rmtree(plotfolder)
 					self.plainTextEditLog.appendPlainText("Interrupted!\n")
 				#Fim dos Métodos
 			else:
@@ -620,11 +627,35 @@ class Ui_MainWindow(QtGui.QMainWindow):
 					self.plainTextEditLog.appendPlainText("Reading Input File...")
 					generateCrossVals.generateCrossValsRandom(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory)
 					self.setUploadFileButtonDisabled()
+
+					# Show #
+					self.dockWidgetContentsTop.setCurrentIndex(1)
+					self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setInputText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.setTestText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_3.clicked.connect(self.setTrainText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.setCleanWidget)
+					self.dockWidgetContentsTop.currentWidget().pushButton_5.clicked.connect(self.openInputText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_6.clicked.connect(self.openTestText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_7.clicked.connect(self.openTrainText)
+					# Show #
+
 					self.plainTextEditLog.appendPlainText("Done!\n")
 				elif self.mainInputWin.radioButton_2.isChecked():
 					self.plainTextEditLog.appendPlainText("Reading Input File...")
 					generateCrossVals.generateCrossValsSequential(unicode(self.mainInputWin.lineEdit.text().toUtf8(), encoding="UTF-8"),self.projectDirectory, self.mainInputWin.spinBox.value()/100.00)
 					self.setUploadFileButtonDisabled()
+
+					# Show #
+					self.dockWidgetContentsTop.setCurrentIndex(1)
+					self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setInputText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.setTestText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_3.clicked.connect(self.setTrainText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.setCleanWidget)
+					self.dockWidgetContentsTop.currentWidget().pushButton_5.clicked.connect(self.openInputText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_6.clicked.connect(self.openTestText)
+					self.dockWidgetContentsTop.currentWidget().pushButton_7.clicked.connect(self.openTrainText)
+					# Show #
+
 					self.plainTextEditLog.appendPlainText("Done!\n")
 				else:
 					sys.exit()
@@ -670,8 +701,54 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		msg.setWindowTitle("Erro")
 		msg.setStandardButtons(QtGui.QMessageBox.Ok)	
 		retval = msg.exec_()
-		
+	
+	def setCleanWidget(self):
+		self.dockWidgetContentsTop.setCurrentIndex(0)
 
+	def setOneWidget(self):
+		self.dockWidgetContentsTop.setCurrentIndex(1)
+
+	def openInputText(self):
+		filename = os.path.join(self.projectDirectory, "Data", "Input.txt") 
+		editor = os.getenv('EDITOR')
+		if editor:
+		    ps.system(editor + ' ' + filename)
+		else:
+		    webbrowser.open(filename)
+
+	def openTestText(self):
+		filename = os.path.join(self.projectDirectory, "Data", "test.dat") 
+		editor = os.getenv('EDITOR')
+		if editor:
+		    ps.system(editor + ' ' + filename)
+		else:
+		    webbrowser.open(filename)
+
+	def openTrainText(self):
+		filename = os.path.join(self.projectDirectory, "Data", "train.dat") 
+		editor = os.getenv('EDITOR')
+		if editor:
+		    ps.system(editor + ' ' + filename)
+		else:
+		    webbrowser.open(filename)
+
+	def setInputText(self):
+		self.dockWidgetContentsTop.setCurrentIndex(2)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.clear()
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setOneWidget)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.appendPlainText( open( os.path.join(self.projectDirectory, "Data", "Input.txt")).read() )
+
+	def setTestText(self):
+		self.dockWidgetContentsTop.setCurrentIndex(2)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.clear()
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setOneWidget)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.appendPlainText( open( os.path.join(self.projectDirectory, "Data", "test.dat")).read() )
+
+	def setTrainText(self):
+		self.dockWidgetContentsTop.setCurrentIndex(2)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.clear()
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setOneWidget)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.appendPlainText( open( os.path.join(self.projectDirectory, "Data", "train.dat")).read() )
 
 if __name__ == '__main__':
 	app = QtGui.QApplication(sys.argv)
