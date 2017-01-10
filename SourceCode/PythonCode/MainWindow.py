@@ -662,6 +662,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.dockWidgetContentsTop.currentWidget().comboBox_2.addItems(self.auxVetorDAT)
 		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
 		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.openKSCPDF)
+		self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.openKSCDAT)
 		#FimShow
 
 		self.plainTextEditLog.appendPlainText("Done!\n")
@@ -760,6 +761,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 	def openKSCPDF(self):
 		filename = os.path.join(self.projectDirectory, "Clustering_KSC", unicode(self.dockWidgetContentsTop.currentWidget().comboBox.currentText().toUtf8(), encoding="UTF-8"))
+		webbrowser.open(filename)
+
+	def openKSCDAT(self):
+		filename = os.path.join(self.projectDirectory, "Clustering_KSC", unicode(self.dockWidgetContentsTop.currentWidget().comboBox_2.currentText().toUtf8(), encoding="UTF-8"))
 		webbrowser.open(filename)
 
 	def openInputText(self):
