@@ -34,6 +34,7 @@ import ViewInputFile
 import webbrowser
 import SelectingPDFFileToOpen
 import SelectingPDFFileAndDatFileToOpen
+import selectingPlotFolderAndFile
 
 try:
 	_fromUtf8 = QtCore.QString.fromUtf8
@@ -105,11 +106,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.plainTextEditLog.appendPlainText("TrendLearnerApp started...\n")
 
 		## Preenche Widgets
-		self.dockWidgetContentsTop.addWidget(QtGui.QWidget())
-		self.dockWidgetContentsTop.addWidget(ViewInputFile.Ui_Form())
-		self.dockWidgetContentsTop.addWidget(textWidget.Ui_Form())
-		self.dockWidgetContentsTop.addWidget(SelectingPDFFileToOpen.Ui_Form())
-		self.dockWidgetContentsTop.addWidget(SelectingPDFFileAndDatFileToOpen.Ui_Form())
+		self.dockWidgetContentsTop.addWidget(QtGui.QWidget()) # 0
+		self.dockWidgetContentsTop.addWidget(ViewInputFile.Ui_Form()) # 1
+		self.dockWidgetContentsTop.addWidget(textWidget.Ui_Form()) # 2
+		self.dockWidgetContentsTop.addWidget(SelectingPDFFileToOpen.Ui_Form()) # 3
+		self.dockWidgetContentsTop.addWidget(SelectingPDFFileAndDatFileToOpen.Ui_Form()) # 4
+		self.dockWidgetContentsTop.addWidget(selectingPlotFolderAndFile.Ui_Form()) # 5
 		## Fim Preenche Widgets
 
 		## FimTenta
@@ -357,7 +359,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.mainBCVWin.buttonBox.button(QtGui.QDialogButtonBox.Cancel).clicked.connect(self.CancelButtonPressed)
 		self.mainBCVWin.buttonBox.button(QtGui.QDialogButtonBox.Ok).clicked.connect(self.bcvOkButtonPressed)
 
-
 	def bcvOkButtonPressed(self):
 		plotfolder = os.path.join(self.projectDirectory, "BCV")
 		os.makedirs(plotfolder)
@@ -381,7 +382,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		#FimShow
 		
 		self.plainTextEditLog.appendPlainText("Done!\n")
-
 
 	def openMainClassifierProbOnly(self):
 		self.plainTextEditLog.appendPlainText("Classifying...")
@@ -583,9 +583,45 @@ class Ui_MainWindow(QtGui.QMainWindow):
 			plotfolder = os.path.join(os.path.join(self.projectDirectory,str(self.selectingclusterfoldWinPlot.comboBox.currentText())), "Examples")
 			os.makedirs(plotfolder)
 			plot_members.plotExamples(self.projectDirectory + "/Data/Input.txt", self.projectDirectory + "/" +str(self.selectingclusterfoldWinPlot.comboBox.currentText()) + "/assign.dat", self.projectDirectory + "/" + str(self.selectingclusterfoldWinPlot.comboBox.currentText()) + "/cents.dat", plotfolder)
+			
+			#Show
+			self.dockWidgetContentsTop.setCurrentIndex(5)
+			self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
+
+			self.root, self.dirs, self.files = os.walk(plotfolder).next()
+			self.auxVetorDIR = []
+			for mdir in self.dirs:
+				self.auxVetorDIR.append(mdir)
+			self.auxVetorDIR.sort()
+			self.dockWidgetContentsTop.currentWidget().comboBox.clear()
+			self.dockWidgetContentsTop.currentWidget().comboBox.addItems(self.auxVetorDIR)
+			self.root2, self.dirs2, self.files2 = os.walk( os.path.join(plotfolder, str(self.dockWidgetContentsTop.currentWidget().comboBox.currentText()) ) ).next()
+			self.auxVetorFiles = []
+			for mfiles in self.files2:
+				self.auxVetorFiles.append(mfiles)
+			self.auxVetorFiles.sort()
+			self.dockWidgetContentsTop.currentWidget().comboBox_2.clear()
+			self.dockWidgetContentsTop.currentWidget().comboBox_2.addItems(self.auxVetorFiles)
+			self.dockWidgetContentsTop.currentWidget().comboBox.activated.connect(lambda: self.on_combo_activatedPlotExamples(plotfolder))
+			self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(lambda: self.openPlotExamplesImage(plotfolder) )
+			#FimShow
+
 			self.plainTextEditLog.appendPlainText("Done!\n")
 		else:
 			self.createErrorBox("All possible examples have already been generated")
+
+	def openPlotExamplesImage(self,directoryArg):
+		filename = os.path.join(directoryArg,unicode(self.dockWidgetContentsTop.currentWidget().comboBox.currentText().toUtf8(), encoding="UTF-8"), unicode(self.dockWidgetContentsTop.currentWidget().comboBox_2.currentText().toUtf8(), encoding="UTF-8"))
+		webbrowser.open(filename)
+
+	def on_combo_activatedPlotExamples(self, directoryArg):
+		self.root2, self.dirs2, self.files2 = os.walk( os.path.join(directoryArg, str(self.dockWidgetContentsTop.currentWidget().comboBox.currentText()) ) ).next()
+		self.auxVetorFiles = []
+		for mfiles in self.files2:
+			self.auxVetorFiles.append(mfiles)
+		self.auxVetorFiles.sort()
+		self.dockWidgetContentsTop.currentWidget().comboBox_2.clear()
+		self.dockWidgetContentsTop.currentWidget().comboBox_2.addItems(self.auxVetorFiles)
 
 	def fillComboBoxPlot(self):
 		self.root, self.dirs, self.files = os.walk(self.projectDirectory).next()
@@ -663,6 +699,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
 		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.openKSCPDF)
 		self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.openKSCDAT)
+		self.dockWidgetContentsTop.currentWidget().pushButton_3.clicked.connect(self.setKSCView)
 		#FimShow
 
 		self.plainTextEditLog.appendPlainText("Done!\n")
@@ -739,7 +776,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(False)
 		#self.toolsClusteringQualityMenuSilhouetteAction.setDisabled(False)
 		
-
 	def createErrorBox(self,notification):
 		msg = QtGui.QMessageBox()
 		msg.setIcon(QtGui.QMessageBox.Critical)
@@ -754,6 +790,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 	def setOneWidget(self):
 		self.dockWidgetContentsTop.setCurrentIndex(1)
+
+	def setFourWidget(self):
+		self.dockWidgetContentsTop.setCurrentIndex(4)
 
 	def openBCVPDF(self):
 		filename = os.path.join(self.projectDirectory, "BCV", unicode(self.dockWidgetContentsTop.currentWidget().comboBox.currentText().toUtf8(), encoding="UTF-8"))
@@ -771,25 +810,32 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		filename = os.path.join(self.projectDirectory, "Data", "Input.txt") 
 		editor = os.getenv('EDITOR')
 		if editor:
-		    ps.system(editor + ' ' + filename)
+			ps.system(editor + ' ' + filename)
 		else:
-		    webbrowser.open(filename)
+			webbrowser.open(filename)
 
 	def openTestText(self):
 		filename = os.path.join(self.projectDirectory, "Data", "test.dat") 
 		editor = os.getenv('EDITOR')
 		if editor:
-		    ps.system(editor + ' ' + filename)
+			ps.system(editor + ' ' + filename)
 		else:
-		    webbrowser.open(filename)
+			webbrowser.open(filename)
 
 	def openTrainText(self):
 		filename = os.path.join(self.projectDirectory, "Data", "train.dat") 
 		editor = os.getenv('EDITOR')
 		if editor:
-		    ps.system(editor + ' ' + filename)
+			ps.system(editor + ' ' + filename)
 		else:
-		    webbrowser.open(filename)
+			webbrowser.open(filename)
+
+	def setKSCView(self):
+		self.auxWord = self.dockWidgetContentsTop.currentWidget().comboBox_2.currentText()
+		self.dockWidgetContentsTop.setCurrentIndex(2)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.clear()
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setFourWidget)
+		self.dockWidgetContentsTop.currentWidget().plainTextEdit.appendPlainText( open( os.path.join(self.projectDirectory, "Clustering_KSC", str(self.auxWord) ) ).read() )
 
 	def setInputText(self):
 		self.dockWidgetContentsTop.setCurrentIndex(2)
