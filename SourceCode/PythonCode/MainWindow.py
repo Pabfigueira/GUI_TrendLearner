@@ -150,6 +150,18 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 
 		self.viewMenu = self.menubar.addMenu('&View')
+		self.viewInputMenu = self.viewMenu.addAction('Input Results', self.setOneWidget)
+		self.viewClusteringMenu = self.viewMenu.addMenu('Clustering')
+		self.viewClusteringClusteringMenu = self.viewClusteringMenu.addMenu('Clustering')
+		self.viewClusteringClusteringKSCAction = self.viewClusteringClusteringMenu.addAction('K-SC Results')
+		self.viewClusteringQualityMenu = self.viewClusteringMenu.addMenu('Quality')
+		self.viewClusteringPlotMenu = self.viewClusteringMenu.addMenu('Plot')
+		self.viewClusteringPlotPlotAction = self.viewClusteringPlotMenu.addAction('Plot Examples Results')
+		self.viewClassifierMenu = self.viewMenu.addMenu('Classifier')
+		self.viewClassifierProbAction = self.viewClassifierMenu.addAction('Probability Only Results')
+		self.viewClassifierERTreeAction = self.viewClassifierMenu.addAction('ERTree Only Results')
+		self.viewClassifierERTreeProbAction = self.viewClassifierMenu.addAction('ERTree + Prob  Results')
+		self.viewClassifierTrendLearnerAction = self.viewClassifierMenu.addAction('TrendLearner Results')
 	   
 		self.helpMenu = self.menubar.addMenu('&Help')
 		self.helpMenuHelpAction = self.helpMenu.addAction("Help Contents")
@@ -309,6 +321,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClassifierMenuProbAction.setDisabled(True)
 		self.toolsClassifierMenuTrendLearnerAction.setDisabled(True)
 		self.toolsClassifierMenuERTreeProbAction.setDisabled(True)
+		self.viewInputMenu.setDisabled(True)
+		self.viewClusteringClusteringKSCAction.setDisabled(True)
+		self.viewClusteringPlotPlotAction.setDisabled(True)
+		self.viewClassifierERTreeAction.setDisabled(True)
+		self.viewClassifierProbAction.setDisabled(True)
+		self.viewClassifierERTreeProbAction.setDisabled(True)
+		self.viewClassifierTrendLearnerAction.setDisabled(True)
 
 
 	def retranslateUi(self, MainWindow):
@@ -367,20 +386,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(True)
 
 		#Show
-		self.dockWidgetContentsTop.setCurrentIndex(3)
-		self.root, self.dirs, self.files = os.walk( os.path.join(self.projectDirectory, "BCV") ) .next()
-		self.auxVetor = []
-		for mfiles in self.files:
-			if mfiles[-4:] == ".pdf":
-				self.auxVetor.append(mfiles)
-		self.auxVetor.sort()
-		self.dockWidgetContentsTop.currentWidget().comboBox.clear()
-		self.dockWidgetContentsTop.currentWidget().comboBox.addItems(self.auxVetor)
-
-		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.openBCVPDF)
-		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
+		self.setThreeWidget()
+		self.viewClusteringQualityBetaCVAction = self.viewClusteringQualityMenu.addAction('BetaCV Results',self.setThreeWidget)
 		#FimShow
-		
 		self.plainTextEditLog.appendPlainText("Done!\n")
 
 	def openMainClassifierProbOnly(self):
@@ -713,14 +721,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 					self.setUploadFileButtonDisabled()
 
 					# Show #
-					self.dockWidgetContentsTop.setCurrentIndex(1)
-					self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setInputText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.setTestText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_3.clicked.connect(self.setTrainText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.setCleanWidget)
-					self.dockWidgetContentsTop.currentWidget().pushButton_5.clicked.connect(self.openInputText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_6.clicked.connect(self.openTestText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_7.clicked.connect(self.openTrainText)
+					self.setOneWidget()
 					# Show #
 
 					self.plainTextEditLog.appendPlainText("Done!\n")
@@ -730,14 +731,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 					self.setUploadFileButtonDisabled()
 
 					# Show #
-					self.dockWidgetContentsTop.setCurrentIndex(1)
-					self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setInputText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.setTestText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_3.clicked.connect(self.setTrainText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.setCleanWidget)
-					self.dockWidgetContentsTop.currentWidget().pushButton_5.clicked.connect(self.openInputText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_6.clicked.connect(self.openTestText)
-					self.dockWidgetContentsTop.currentWidget().pushButton_7.clicked.connect(self.openTrainText)
+					self.setOneWidget()
 					# Show #
 
 					self.plainTextEditLog.appendPlainText("Done!\n")
@@ -775,6 +769,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 		self.toolsClusteringClusteringMenuKSCAction.setDisabled(False)
 		self.toolsClusteringQualityMenuBetaCVAction.setDisabled(False)
 		#self.toolsClusteringQualityMenuSilhouetteAction.setDisabled(False)
+		self.viewInputMenu.setDisabled(False)
 		
 	def createErrorBox(self,notification):
 		msg = QtGui.QMessageBox()
@@ -790,6 +785,27 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
 	def setOneWidget(self):
 		self.dockWidgetContentsTop.setCurrentIndex(1)
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setInputText)
+		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.setTestText)
+		self.dockWidgetContentsTop.currentWidget().pushButton_3.clicked.connect(self.setTrainText)
+		self.dockWidgetContentsTop.currentWidget().pushButton_4.clicked.connect(self.setCleanWidget)
+		self.dockWidgetContentsTop.currentWidget().pushButton_5.clicked.connect(self.openInputText)
+		self.dockWidgetContentsTop.currentWidget().pushButton_6.clicked.connect(self.openTestText)
+		self.dockWidgetContentsTop.currentWidget().pushButton_7.clicked.connect(self.openTrainText)
+
+	def setThreeWidget(self):
+		self.dockWidgetContentsTop.setCurrentIndex(3)
+		self.root, self.dirs, self.files = os.walk( os.path.join(self.projectDirectory, "BCV") ) .next()
+		self.auxVetor = []
+		for mfiles in self.files:
+			if mfiles[-4:] == ".pdf":
+				self.auxVetor.append(mfiles)
+		self.auxVetor.sort()
+		self.dockWidgetContentsTop.currentWidget().comboBox.clear()
+		self.dockWidgetContentsTop.currentWidget().comboBox.addItems(self.auxVetor)
+
+		self.dockWidgetContentsTop.currentWidget().pushButton_2.clicked.connect(self.openBCVPDF)
+		self.dockWidgetContentsTop.currentWidget().pushButton.clicked.connect(self.setCleanWidget)
 
 	def setFourWidget(self):
 		self.dockWidgetContentsTop.setCurrentIndex(4)
