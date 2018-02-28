@@ -1,2 +1,2 @@
 # GUI_TrendLearner
-Graphic Interface - TrendLearner
+Graphical User Interface - TrendLearner
